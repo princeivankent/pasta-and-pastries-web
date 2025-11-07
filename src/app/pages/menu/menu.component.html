@@ -1,0 +1,41 @@
+<div class="container mx-auto px-4 py-12">
+  <!-- Page Header -->
+  <div class="text-center mb-12">
+    <h1 class="text-5xl font-bold mb-4">Our Menu</h1>
+    <p class="text-xl text-base-content/70">Discover our selection of homemade pasta and freshly baked pastries</p>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="flex justify-center mb-8">
+    <div class="tabs tabs-boxed">
+      <a
+        class="tab"
+        [class.tab-active]="selectedCategory === 'all'"
+        (click)="filterByCategory('all')">
+        All Items
+      </a>
+      <a
+        class="tab"
+        [class.tab-active]="selectedCategory === 'pasta'"
+        (click)="filterByCategory('pasta')">
+        Pasta
+      </a>
+      <a
+        class="tab"
+        [class.tab-active]="selectedCategory === 'pastry'"
+        (click)="filterByCategory('pastry')">
+        Pastries
+      </a>
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <app-product-card *ngFor="let product of filteredProducts" [product]="product" />
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredProducts.length === 0" class="text-center py-12">
+    <p class="text-xl text-base-content/70">No products found in this category.</p>
+  </div>
+</div>

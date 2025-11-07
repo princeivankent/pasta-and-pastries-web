@@ -1,0 +1,27 @@
+<div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-neutral/10 hover:border-accent-red/20 rounded-2xl overflow-hidden">
+  <figure class="px-8 pt-8">
+    <div class="w-full aspect-square flex items-center justify-center bg-base-200 rounded-2xl">
+      <!-- Product illustration based on category -->
+      <svg *ngIf="product.category === 'pasta'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" class="w-full h-full p-4">
+        <rect x="25" y="80" width="90" height="12" fill="#D4A574" stroke="#8B6F47" stroke-width="2" rx="2"/>
+        <rect x="25" y="68" width="90" height="12" fill="#C9896B" stroke="#8B6F47" stroke-width="2" rx="2"/>
+        <rect x="25" y="56" width="90" height="12" fill="#E8C9A0" stroke="#8B6F47" stroke-width="2" rx="2"/>
+        <rect x="25" y="44" width="90" height="12" fill="#D4A574" stroke="#8B6F47" stroke-width="2" rx="2"/>
+      </svg>
+      <svg *ngIf="product.category === 'pastry'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" class="w-full h-full p-4">
+        <ellipse cx="70" cy="70" rx="40" ry="30" fill="#E8C9A0" stroke="#8B6F47" stroke-width="2.5"/>
+        <ellipse cx="58" cy="64" rx="5" ry="5" fill="#5D4037"/>
+        <ellipse cx="70" cy="67" rx="5" ry="5" fill="#5D4037"/>
+        <ellipse cx="82" cy="65" rx="5" ry="5" fill="#5D4037"/>
+        <ellipse cx="62" cy="76" rx="5" ry="5" fill="#5D4037"/>
+        <ellipse cx="78" cy="74" rx="5" ry="5" fill="#5D4037"/>
+      </svg>
+    </div>
+  </figure>
+  <div class="card-body items-center text-center px-6 py-8">
+    <h3 class="text-2xl font-bold mb-2">{{ product.name }}</h3>
+    <p class="text-2xl font-bold mb-3" [class.text-accent-red]="product.price > 0" *ngIf="product.price > 0">₱{{ product.price }}</p>
+    <p class="text-2xl font-bold text-accent-red mb-3" *ngIf="product.price === 0">₱00</p>
+    <p class="text-base text-base-content/70 leading-relaxed">{{ product.description }}</p>
+  </div>
+</div>

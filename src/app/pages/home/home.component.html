@@ -1,0 +1,112 @@
+<!-- Hero Section -->
+<div class="bg-base-100 py-16 lg:py-24">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 max-w-7xl mx-auto">
+      <!-- Lasagna Illustration - LEFT SIDE -->
+      <div class="w-full lg:w-1/2 flex justify-center items-center order-2 lg:order-1">
+        <div class="w-full max-w-md aspect-square bg-base-200 rounded-3xl shadow-xl flex items-center justify-center border-4 border-neutral/5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" class="w-4/5 h-4/5">
+            <!-- Enhanced lasagna illustration with more detail -->
+            <g transform="translate(50, 50)">
+              <!-- Top cheese layer with texture -->
+              <ellipse cx="100" cy="35" rx="100" ry="15" fill="#F4E4C1" stroke="#8B6F47" stroke-width="3"/>
+              <ellipse cx="100" cy="35" rx="90" ry="10" fill="#E8D5BC"/>
+
+              <!-- Layer 1 -->
+              <rect x="0" y="35" width="200" height="20" fill="#D4A574" stroke="#8B6F47" stroke-width="2.5" rx="3"/>
+              <line x1="0" y1="45" x2="200" y2="45" stroke="#A67C52" stroke-width="1.5"/>
+
+              <!-- Layer 2 -->
+              <rect x="0" y="55" width="200" height="20" fill="#C9896B" stroke="#8B6F47" stroke-width="2.5" rx="3"/>
+              <line x1="0" y1="65" x2="200" y2="65" stroke="#9D6B52" stroke-width="1.5"/>
+
+              <!-- Layer 3 -->
+              <rect x="0" y="75" width="200" height="20" fill="#E8C9A0" stroke="#8B6F47" stroke-width="2.5" rx="3"/>
+              <line x1="0" y1="85" x2="200" y2="85" stroke="#C9A67B" stroke-width="1.5"/>
+
+              <!-- Layer 4 -->
+              <rect x="0" y="95" width="200" height="20" fill="#D4A574" stroke="#8B6F47" stroke-width="2.5" rx="3"/>
+              <line x1="0" y1="105" x2="200" y2="105" stroke="#A67C52" stroke-width="1.5"/>
+
+              <!-- Layer 5 -->
+              <rect x="0" y="115" width="200" height="20" fill="#C9896B" stroke="#8B6F47" stroke-width="2.5" rx="3"/>
+              <line x1="0" y1="125" x2="200" y2="125" stroke="#9D6B52" stroke-width="1.5"/>
+
+              <!-- Layer 6 -->
+              <rect x="0" y="135" width="200" height="20" fill="#E8C9A0" stroke="#8B6F47" stroke-width="2.5" rx="3"/>
+              <line x1="0" y1="145" x2="200" y2="145" stroke="#C9A67B" stroke-width="1.5"/>
+
+              <!-- Bottom layer -->
+              <rect x="0" y="155" width="200" height="20" fill="#D4A574" stroke="#8B6F47" stroke-width="2.5" rx="3"/>
+
+              <!-- Side shading for depth -->
+              <rect x="0" y="35" width="10" height="140" fill="#000000" opacity="0.1"/>
+              <rect x="190" y="35" width="10" height="140" fill="#000000" opacity="0.05"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Text Content - RIGHT SIDE -->
+      <div class="w-full lg:w-1/2 text-center lg:text-left order-1 lg:order-2">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          Homemade Lasagna & Freshly Baked Goodies — Made with Love from Pasta & Pastries
+        </h1>
+        <p class="text-xl mb-8 text-base-content/70 leading-relaxed">
+          A small family business bringing comfort food to your table. Each Pasta & Pastries dish is baked fresh daily with love and care.
+        </p>
+        <a routerLink="/menu" class="btn bg-accent-red hover:bg-accent-red/90 text-white border-none btn-lg text-lg px-8 py-4 rounded-full">
+          View Menu
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- About Section -->
+<div class="bg-base-100 py-20">
+  <div class="container mx-auto px-4">
+    <div class="text-center max-w-3xl mx-auto">
+      <h2 class="text-5xl font-bold mb-8">About</h2>
+      <p class="text-xl text-base-content/80 leading-relaxed">
+        A small family business bringing comfort food to your table. Each Pasta & Pastries dish is baked fresh daily with love and care.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Best Sellers Section -->
+<div class="bg-base-100 py-20">
+  <div class="container mx-auto px-4">
+    <h2 class="text-5xl font-bold text-center mb-16">Best Sellers</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <app-product-card *ngFor="let product of bestSellers" [product]="product" />
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="bg-accent-red text-white py-20">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row items-center justify-center gap-6 max-w-5xl mx-auto">
+      <div class="flex gap-2 bg-white text-accent-red px-6 py-3 rounded-full shadow-lg">
+        <svg *ngFor="let star of getStars(5)" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 fill-current" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      </div>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center md:text-left">The best lasagna in town!</h2>
+    </div>
+  </div>
+</div>
+
+<!-- Order CTA Section -->
+<div class="bg-base-100 py-20">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold mb-8 max-w-4xl mx-auto leading-tight">
+      Ready to order? Pickup or Delivery available — click below to start your order!
+    </h2>
+    <a routerLink="/contact" class="btn bg-accent-red hover:bg-accent-red/90 text-white border-none btn-lg text-lg px-10 py-4 rounded-full">
+      Order Now
+    </a>
+  </div>
+</div>
