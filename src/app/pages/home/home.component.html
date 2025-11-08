@@ -58,8 +58,17 @@
 
       <!-- Carousel Track -->
       <div class="overflow-hidden rounded-3xl">
-        <div class="flex transition-transform duration-500 ease-out"
-             [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
+        <div class="flex ease-out select-none cursor-grab active:cursor-grabbing"
+             [class.transition-transform]="!isDragging"
+             [class.duration-500]="!isDragging"
+             [style.transform]="getCarouselTransform()"
+             (touchstart)="onTouchStart($event)"
+             (touchmove)="onTouchMove($event)"
+             (touchend)="onTouchEnd()"
+             (mousedown)="onMouseDown($event)"
+             (mousemove)="onMouseMove($event)"
+             (mouseup)="onMouseUp()"
+             (mouseleave)="onMouseLeave()">
 
           <!-- Testimonial Card -->
           <div *ngFor="let testimonial of testimonials; let i = index"
