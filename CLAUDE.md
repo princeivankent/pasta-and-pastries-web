@@ -128,3 +128,4 @@ Mobile-first with DaisyUI/Tailwind breakpoints:
 - `decisions.md`: Architectural decisions and rationale
 - `progress.md`: Implementation progress and feature checklist
 - `bugs.md`: Known issues and future improvements
+- Follow the coding standard for maintainable code and always check if there's an existing component available in Tailwind and DaisyUI before creating a new one. And always follow the coding/pattern of these UI framework.

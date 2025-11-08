@@ -2,8 +2,9 @@
   <div class="container mx-auto px-4 md:px-6">
     <div class="flex items-center justify-between py-4 md:py-5">
       <!-- Brand -->
-      <a routerLink="/" class="text-2xl md:text-3xl font-bold tracking-tight text-neutral">
+      <a routerLink="/" class="text-2xl md:text-3xl font-heading font-bold tracking-tight text-neutral">
         Pasta & Pastries
+        <span class="text-base font-body italic text-olive-green">by Cha</span>
       </a>
 
       <!-- Mobile Menu Button -->
@@ -41,28 +42,28 @@
           routerLink="/"
           routerLinkActive="font-semibold"
           [routerLinkActiveOptions]="{exact: true}"
-          class="text-base text-neutral hover:text-accent-red transition-colors"
+          class="text-base text-neutral hover:text-olive-green transition-colors"
         >
           Home
         </a>
         <a
           routerLink="/menu"
           routerLinkActive="font-semibold"
-          class="text-base text-neutral hover:text-accent-red transition-colors"
+          class="text-base text-neutral hover:text-olive-green transition-colors"
         >
           Menu
         </a>
         <a
           routerLink="/about"
           routerLinkActive="font-semibold"
-          class="text-base text-neutral hover:text-accent-red transition-colors"
+          class="text-base text-neutral hover:text-olive-green transition-colors"
         >
           About
         </a>
         <a
           routerLink="/contact"
           routerLinkActive="font-semibold"
-          class="text-base text-neutral hover:text-accent-red transition-colors"
+          class="text-base text-neutral hover:text-olive-green transition-colors"
         >
           Contact
         </a>
@@ -80,7 +81,7 @@
           routerLinkActive="font-semibold bg-base-200"
           [routerLinkActiveOptions]="{exact: true}"
           (click)="closeMobileMenu()"
-          class="text-base text-neutral hover:text-accent-red hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
+          class="text-base text-neutral hover:text-olive-green hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
         >
           Home
         </a>
@@ -88,7 +89,7 @@
           routerLink="/menu"
           routerLinkActive="font-semibold bg-base-200"
           (click)="closeMobileMenu()"
-          class="text-base text-neutral hover:text-accent-red hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
+          class="text-base text-neutral hover:text-olive-green hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
         >
           Menu
         </a>
@@ -96,7 +97,7 @@
           routerLink="/about"
           routerLinkActive="font-semibold bg-base-200"
           (click)="closeMobileMenu()"
-          class="text-base text-neutral hover:text-accent-red hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
+          class="text-base text-neutral hover:text-olive-green hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
         >
           About
         </a>
@@ -104,7 +105,7 @@
           routerLink="/contact"
           routerLinkActive="font-semibold bg-base-200"
           (click)="closeMobileMenu()"
-          class="text-base text-neutral hover:text-accent-red hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
+          class="text-base text-neutral hover:text-olive-green hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
         >
           Contact
         </a>

@@ -10,77 +10,41 @@ export class ProductsService {
       id: 1,
       name: 'Lasagna',
       category: 'pasta',
-      description: 'Creamy layers with 100% beet and mozzarella',
+      description: 'Creamy layers with 100% beef and mozzarella',
       price: 280,
-      image: 'assets/images/products/lasagna.svg',
+      image: 'images/lasagna.jpg',
       isBestSeller: true,
-      ingredients: ['Pasta sheets', 'Beet', 'Mozzarella', 'Tomato sauce', 'Herbs']
+      ingredients: ['Pasta sheets', 'Beef', 'Mozzarella', 'Tomato sauce', 'Herbs']
     },
     {
       id: 2,
-      name: 'Banana Muffins',
-      category: 'pastry',
-      description: 'Moist and fluffy with ripe bananas',
-      price: 100,
-      image: 'assets/images/products/banana-muffins.svg',
+      name: 'Cheesy Baked Mac',
+      category: 'pasta',
+      description: 'Rich and creamy baked macaroni with cheese',
+      price: 250,
+      image: 'images/cheesy-baked-mac.jpg',
       isBestSeller: true,
-      ingredients: ['Ripe bananas', 'Flour', 'Sugar', 'Eggs', 'Butter']
+      ingredients: ['Macaroni', 'Cheddar cheese', 'Milk', 'Butter', 'Breadcrumbs']
     },
     {
       id: 3,
-      name: 'Banana Loaf',
+      name: 'Choco Banana Muffins',
       category: 'pastry',
-      description: 'Sweet and tender with a hint of banana',
-      price: 150,
-      image: 'assets/images/products/banana-loaf.svg',
+      description: 'Moist chocolate muffins with ripe bananas',
+      price: 100,
+      image: 'images/choco-banana-muffins.jpg',
       isBestSeller: true,
-      ingredients: ['Bananas', 'Flour', 'Brown sugar', 'Walnuts']
+      ingredients: ['Ripe bananas', 'Chocolate chips', 'Flour', 'Sugar', 'Eggs']
     },
     {
       id: 4,
-      name: 'Crinkles',
+      name: 'Carrot Muffins',
       category: 'pastry',
-      description: 'Soft and chewy chocolate cookies',
-      price: 0,
-      image: 'assets/images/products/crinkles.svg',
+      description: 'Sweet and spiced carrot muffins',
+      price: 100,
+      image: 'images/carot-muffins.jpg',
       isBestSeller: true,
-      ingredients: ['Chocolate', 'Flour', 'Sugar', 'Eggs', 'Powdered sugar']
-    },
-    {
-      id: 5,
-      name: 'Fettuccine Alfredo',
-      category: 'pasta',
-      description: 'Rich and creamy pasta with parmesan sauce',
-      price: 250,
-      image: 'assets/images/products/fettuccine.svg',
-      ingredients: ['Fettuccine', 'Heavy cream', 'Parmesan', 'Butter', 'Garlic']
-    },
-    {
-      id: 6,
-      name: 'Ravioli',
-      category: 'pasta',
-      description: 'Handmade pasta pockets filled with ricotta and spinach',
-      price: 300,
-      image: 'assets/images/products/ravioli.svg',
-      ingredients: ['Fresh pasta', 'Ricotta', 'Spinach', 'Parmesan', 'Tomato sauce']
-    },
-    {
-      id: 7,
-      name: 'Chocolate Croissant',
-      category: 'pastry',
-      description: 'Flaky, buttery pastry with rich chocolate filling',
-      price: 120,
-      image: 'assets/images/products/croissant.svg',
-      ingredients: ['Butter', 'Flour', 'Dark chocolate', 'Yeast', 'Milk']
-    },
-    {
-      id: 8,
-      name: 'Tiramisu',
-      category: 'pastry',
-      description: 'Classic Italian dessert with coffee and mascarpone',
-      price: 180,
-      image: 'assets/images/products/tiramisu.svg',
-      ingredients: ['Ladyfingers', 'Mascarpone', 'Espresso', 'Cocoa powder', 'Eggs']
+      ingredients: ['Carrots', 'Flour', 'Cinnamon', 'Sugar', 'Walnuts']
     }
   ];
 

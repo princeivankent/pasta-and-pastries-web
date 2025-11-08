@@ -11,7 +11,11 @@
       "Bash(findstr:*)",
       "Bash(npm install:*)",
       "Bash(netstat:*)",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Bash(if [ -d \"src/assets/images\" ])",
+      "Bash(then echo \"Directory exists\")",
+      "Bash(else echo \"Directory does not exist\")",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []
