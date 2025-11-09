@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductsService } from '../../services/products.service';
+import { SeoService } from '../../services/seo.service';
 import { Product } from '../../models/product';
 
 @Component({
@@ -15,9 +16,22 @@ export class MenuComponent implements OnInit {
   filteredProducts: Product[] = [];
   selectedCategory: 'all' | 'pasta' | 'pastry' = 'all';
 
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private seoService: SeoService
+  ) {}
 
   ngOnInit(): void {
+    // Set SEO meta tags for menu page
+    this.seoService.updateMetaTags({
+      title: 'Our Menu - Pasta & Pastries by Cha',
+      description: 'Browse our delicious menu of homemade pasta and fresh pastries. From classic lasagna to gourmet carbonara, and chocolate croissants to artisan sourdough bread.',
+      keywords: 'menu, pasta menu, pastries menu, lasagna, carbonara, croissants, sourdough bread, homemade pasta, fresh bakery',
+      image: '/images/lasagna.jpg',
+      url: 'https://pastaandpastriesbycha.com/menu',
+      type: 'website'
+    });
+
     this.allProducts = this.productsService.getAllProducts();
     this.filteredProducts = this.allProducts;
   }
