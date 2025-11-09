@@ -4,7 +4,9 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout.service';
+import { AuthService } from '../../services/auth.service';
 import { CartItem } from '../../models/cart-item';
+import { User } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +21,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   cartCount = 0;
   cartTotal = 0;
   cartBadgePulse = false;
+  currentUser: User | null = null;
+  isUserMenuOpen = false;
   private cartCheckInterval: any;
   private isBrowser: boolean;
   private previousCartCount = 0;
@@ -26,6 +30,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(
     public cartService: CartService,
     public checkoutService: CheckoutService,
+    public authService: AuthService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -33,6 +38,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.updateCart();
+    // Subscribe to auth state changes
+    this.authService.user$.subscribe(user => {
+      this.currentUser = user;
+    });
     // Check for cart updates every second - only in browser
     if (this.isBrowser) {
       this.cartCheckInterval = setInterval(() => {
@@ -126,6 +135,32 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.cartService.clearCart();
       this.updateCart();
       this.closeCart();
+    }
+  }
+
+  toggleUserMenu(): void {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  closeUserMenu(): void {
+    this.isUserMenuOpen = false;
+  }
+
+  async signIn(): Promise<void> {
+    try {
+      await this.authService.signInWithGoogle();
+      this.closeUserMenu();
+    } catch (error) {
+      console.error('Failed to sign in:', error);
+    }
+  }
+
+  async signOut(): Promise<void> {
+    try {
+      await this.authService.signOutUser();
+      this.closeUserMenu();
+    } catch (error) {
+      console.error('Failed to sign out:', error);
     }
   }
 }

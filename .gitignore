@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment files with sensitive data
+# Note: Template environment files are committed with placeholders
+# Create local copies with real Firebase credentials
+/src/environments/environment.local.ts
+/src/environments/*.local.ts
