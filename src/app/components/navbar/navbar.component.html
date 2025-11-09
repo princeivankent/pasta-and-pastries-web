@@ -67,6 +67,13 @@
         >
           Contact
         </a>
+        <a
+          routerLink="/orders"
+          routerLinkActive="font-semibold"
+          class="text-base text-neutral hover:text-olive-green transition-colors"
+        >
+          Orders
+        </a>
 
         <!-- User Menu -->
         <div class="relative">
@@ -176,6 +183,14 @@
           class="text-base text-neutral hover:text-olive-green hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
         >
           Contact
+        </a>
+        <a
+          routerLink="/orders"
+          routerLinkActive="font-semibold bg-base-200"
+          (click)="closeMobileMenu()"
+          class="text-base text-neutral hover:text-olive-green hover:bg-base-200 transition-colors px-4 py-3 rounded-lg"
+        >
+          Orders
         </a>
         <button
           (click)="toggleCart(); closeMobileMenu()"
