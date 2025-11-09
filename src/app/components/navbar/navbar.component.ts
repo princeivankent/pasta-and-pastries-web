@@ -147,26 +147,34 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // Get user's default address and create order
     this.addressService.getDefaultAddress().subscribe({
       next: (defaultAddress) => {
+        // Check if user has a default address
+        if (!defaultAddress) {
+          // No default address - prompt user to add one
+          this.toastService.warning('Please add a delivery address to proceed with your order.', 4000);
+          this.closeCart();
+          this.isAddressDialogOpen = true;
+          this.showWelcomeAddressDialog = false;
+          return;
+        }
+
         // Prepare customer info with address
         const customerInfo: any = {
           name: this.currentUser?.displayName || undefined,
           email: this.currentUser?.email || undefined
         };
 
-        // If user has a default address, use it for delivery
-        if (defaultAddress) {
-          const fullAddress = [
-            defaultAddress.street,
-            defaultAddress.barangay,
-            defaultAddress.city,
-            defaultAddress.province,
-            defaultAddress.postalCode,
-            defaultAddress.country
-          ].filter(Boolean).join(', ');
+        // Build full address string
+        const fullAddress = [
+          defaultAddress.street,
+          defaultAddress.barangay,
+          defaultAddress.city,
+          defaultAddress.province,
+          defaultAddress.postalCode,
+          defaultAddress.country
+        ].filter(Boolean).join(', ');
 
-          customerInfo.deliveryAddress = fullAddress;
-          customerInfo.phone = defaultAddress.phoneNumber;
-        }
+        customerInfo.deliveryAddress = fullAddress;
+        customerInfo.phone = defaultAddress.phoneNumber;
 
         // Default order type is 'delivery'
         const orderType = 'delivery';
@@ -174,8 +182,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         // Create the order
         this.checkoutService.createOrder(orderType, customerInfo).subscribe({
           next: (order) => {
-            const orderTypeText = order.deliveryAddress ? 'Delivery' : 'Pickup';
-            this.toastService.success(`Order created successfully! Order #${order.id.substring(0, 8)}... (${orderTypeText}) - Total: ₱${order.totalAmount.toFixed(2)}`, 5000);
+            this.toastService.success(`Order created successfully! Order #${order.id.substring(0, 8)}... (Delivery) - Total: ₱${order.totalAmount.toFixed(2)}`, 5000);
             this.cartService.clearCart();
             this.updateCart();
             this.closeCart();
@@ -190,26 +197,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.log('Could not fetch address:', error);
-        // Proceed with delivery order if address fetch fails
-        const customerInfo = {
-          name: this.currentUser?.displayName || undefined,
-          email: this.currentUser?.email || undefined
-        };
-
-        this.checkoutService.createOrder('delivery', customerInfo).subscribe({
-          next: (order) => {
-            this.toastService.success(`Order created successfully! Order #${order.id.substring(0, 8)}... (Delivery) - Total: ₱${order.totalAmount.toFixed(2)}`, 5000);
-            this.cartService.clearCart();
-            this.updateCart();
-            this.closeCart();
-            // Navigate to orders page
-            this.router.navigate(['/orders']);
-          },
-          error: (error) => {
-            console.error('Error creating order:', error);
-            this.toastService.error(`Failed to create order: ${error.message}. Please try again.`, 5000);
-          }
-        });
+        // If address fetch fails, prompt user to add address
+        this.toastService.warning('Please add a delivery address to proceed with your order.', 4000);
+        this.closeCart();
+        this.isAddressDialogOpen = true;
+        this.showWelcomeAddressDialog = false;
       }
     });
   }
