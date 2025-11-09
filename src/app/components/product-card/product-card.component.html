@@ -1,7 +1,11 @@
 <div class="card bg-base-100 shadow-md hover:shadow-xl transition-all duration-300 border-2 border-neutral/10 hover:border-olive-green/30 rounded-3xl overflow-hidden">
-  <figure class="px-8 pt-8">
+  <figure class="px-8 pt-8 cursor-pointer group" (click)="openModal()">
     <div class="w-full aspect-square flex items-center justify-center bg-base-200 rounded-3xl border-2 border-neutral/5 overflow-hidden">
-      <img [src]="product.image" [alt]="product.name" class="w-full h-full object-cover" />
+      <img
+        [src]="product.image"
+        [alt]="product.name"
+        class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-2"
+      />
     </div>
   </figure>
   <div class="card-body items-center text-center px-6 py-8">
@@ -11,3 +15,9 @@
     <p class="text-base text-base-content/70 leading-relaxed font-body">{{ product.description }}</p>
   </div>
 </div>
+
+<!-- Product Modal -->
+<app-product-modal
+  [product]="selectedProduct"
+  (closeModal)="closeModal()"
+></app-product-modal>
