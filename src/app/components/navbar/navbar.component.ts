@@ -6,6 +6,7 @@ import { CartService } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout.service';
 import { AuthService } from '../../services/auth.service';
 import { AddressService } from '../../services/address.service';
+import { ToastService } from '../../services/toast.service';
 import { CartItem } from '../../models/cart-item';
 import { User } from '@angular/fire/auth';
 import { AddressDialogComponent } from '../address-dialog/address-dialog.component';
@@ -36,6 +37,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     public checkoutService: CheckoutService,
     public authService: AuthService,
     private addressService: AddressService,
+    private toastService: ToastService,
     private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
@@ -172,8 +174,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
         // Create the order
         this.checkoutService.createOrder(orderType, customerInfo).subscribe({
           next: (order) => {
-            const addressInfo = order.deliveryAddress ? `\nDelivery Address: ${order.deliveryAddress}` : '\n(Pickup Order)';
-            alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}${addressInfo}\n\nThank you for your order!`);
+            const orderTypeText = order.deliveryAddress ? 'Delivery' : 'Pickup';
+            this.toastService.success(`Order created successfully! Order #${order.id.substring(0, 8)}... (${orderTypeText}) - Total: ₱${order.totalAmount.toFixed(2)}`, 5000);
             this.cartService.clearCart();
             this.updateCart();
             this.closeCart();
@@ -182,7 +184,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
           },
           error: (error) => {
             console.error('Error creating order:', error);
-            alert(`Failed to create order: ${error.message}\n\nPlease try again or contact support.`);
+            this.toastService.error(`Failed to create order: ${error.message}. Please try again.`, 5000);
           }
         });
       },
@@ -196,7 +198,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
         this.checkoutService.createOrder('pickup', customerInfo).subscribe({
           next: (order) => {
-            alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}\n(Pickup Order)\n\nThank you for your order!`);
+            this.toastService.success(`Order created successfully! Order #${order.id.substring(0, 8)}... (Pickup) - Total: ₱${order.totalAmount.toFixed(2)}`, 5000);
             this.cartService.clearCart();
             this.updateCart();
             this.closeCart();
@@ -205,7 +207,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
           },
           error: (error) => {
             console.error('Error creating order:', error);
-            alert(`Failed to create order: ${error.message}\n\nPlease try again or contact support.`);
+            this.toastService.error(`Failed to create order: ${error.message}. Please try again.`, 5000);
           }
         });
       }
