@@ -189,7 +189,7 @@ export class AddressService {
       }),
       catchError(error => {
         console.error('Error fetching addresses from Firestore:', error);
-        return of([]);
+        return throwError(() => new Error('Failed to fetch addresses from Firestore'));
       })
     );
   }

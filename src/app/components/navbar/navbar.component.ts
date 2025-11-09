@@ -238,10 +238,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
             }
           },
           error: (error) => {
-            console.log('Could not check user addresses:', error);
-            // Show welcome dialog anyway for new users
-            this.showWelcomeAddressDialog = true;
-            this.isAddressDialogOpen = true;
+            console.error('Could not check user addresses:', error);
+            // Don't show modal on error - only show when we successfully confirm no addresses exist
           }
         });
       }
