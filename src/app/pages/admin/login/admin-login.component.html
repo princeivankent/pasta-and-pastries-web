@@ -1,0 +1,41 @@
+<div class="min-h-screen flex items-center justify-center bg-base-200 p-4">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl">
+    <div class="card-body p-8">
+      <h2 class="card-title text-center justify-center mb-2 text-2xl">Admin Login</h2>
+      <p class="text-center text-sm text-base-content/70 mb-8">Enter password to access admin dashboard</p>
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-control w-full">
+          <label class="label">
+            <span class="label-text font-medium">Password</span>
+          </label>
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Enter admin password"
+            class="input input-bordered w-full px-4 py-3 h-12"
+            [disabled]="isLoading"
+            required
+          />
+        </div>
+
+        <div class="form-control mt-8">
+          <button
+            type="submit"
+            class="btn btn-primary h-12 text-base"
+            [disabled]="isLoading"
+          >
+            <span *ngIf="isLoading" class="loading loading-spinner loading-sm"></span>
+            <span *ngIf="!isLoading">Login</span>
+            <span *ngIf="isLoading">Logging in...</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="text-center mt-6">
+        <a routerLink="/" class="link link-primary text-sm hover:text-primary-focus">Back to Home</a>
+      </div>
+    </div>
+  </div>
+</div>
