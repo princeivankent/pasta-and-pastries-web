@@ -149,10 +149,10 @@ export class CheckoutService {
     };
 
     // Only add optional fields if they have values
+    // NOTE: deliveryAddress is NOT saved to Firestore - it's saved to localStorage on checkout
     if (order.customerName) orderData.customerName = order.customerName;
     if (order.customerEmail) orderData.customerEmail = order.customerEmail;
     if (order.customerPhone) orderData.customerPhone = order.customerPhone;
-    if (order.deliveryAddress) orderData.deliveryAddress = order.deliveryAddress;
     if (order.specialInstructions) orderData.specialInstructions = order.specialInstructions;
 
     return from(addDoc(ordersCollection, orderData)).pipe(

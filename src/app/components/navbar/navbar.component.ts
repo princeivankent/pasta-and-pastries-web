@@ -157,12 +157,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
           return;
         }
 
-        // Prepare customer info with address
-        const customerInfo: any = {
-          name: this.currentUser?.displayName || undefined,
-          email: this.currentUser?.email || undefined
-        };
-
         // Build full address string
         const fullAddress = [
           defaultAddress.street,
@@ -173,8 +167,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
           defaultAddress.country
         ].filter(Boolean).join(', ');
 
-        customerInfo.deliveryAddress = fullAddress;
-        customerInfo.phone = defaultAddress.phoneNumber;
+        // Save delivery address to localStorage (NOT to Firestore)
+        if (this.isBrowser) {
+          localStorage.setItem('pasta-haus-delivery-address', fullAddress);
+        }
+
+        // Prepare customer info without delivery address (it's in localStorage now)
+        const customerInfo: any = {
+          name: this.currentUser?.displayName || undefined,
+          email: this.currentUser?.email || undefined,
+          phone: defaultAddress.phoneNumber
+        };
 
         // Default order type is 'delivery'
         const orderType = 'delivery';

@@ -69,10 +69,10 @@
               <p class="text-sm font-semibold text-base-content/70">Order Type</p>
               <p class="badge badge-outline">{{ order.orderType | uppercase }}</p>
 
-              <!-- Delivery Address -->
-              <div *ngIf="order.orderType === 'delivery' && order.deliveryAddress" class="mt-2">
+              <!-- Delivery Address Note -->
+              <div *ngIf="order.orderType === 'delivery'" class="mt-2">
                 <p class="text-sm font-semibold text-base-content/70">Delivery Address</p>
-                <p class="text-sm">{{ order.deliveryAddress }}</p>
+                <p class="text-sm text-base-content/50 italic">Saved in customer's device (localStorage)</p>
               </div>
             </div>
           </div>
