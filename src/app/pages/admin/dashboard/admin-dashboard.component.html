@@ -4,7 +4,7 @@
     <div class="container mx-auto px-4 py-4">
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold">Admin Dashboard - Order Tracker</h1>
-        <button (click)="logout()" class="btn btn-ghost btn-sm">
+        <button (click)="logout()" class="btn btn-outline btn-sm px-4">
           Logout
         </button>
       </div>
@@ -15,12 +15,12 @@
   <div class="container mx-auto px-4 py-8">
     <!-- Filter Bar -->
     <div class="card bg-base-100 shadow-md mb-6">
-      <div class="card-body">
+      <div class="card-body p-4">
         <div class="flex flex-wrap gap-2">
           <button
             *ngFor="let option of statusOptions"
             (click)="onStatusFilterChange(option.value)"
-            [class]="'btn btn-sm ' + (selectedStatus === option.value ? 'btn-primary' : 'btn-ghost')"
+            [class]="'btn btn-sm px-4 ' + (selectedStatus === option.value ? 'btn-primary' : 'btn-ghost')"
           >
             {{ option.label }}
           </button>
@@ -99,8 +99,8 @@
                       </span>
                     </td>
                     <td>{{ item.quantity }}</td>
-                    <td>${{ getItemPrice(item).toFixed(2) }}</td>
-                    <td>${{ (getItemPrice(item) * item.quantity).toFixed(2) }}</td>
+                    <td>₱{{ getItemPrice(item).toFixed(2) }}</td>
+                    <td>₱{{ (getItemPrice(item) * item.quantity).toFixed(2) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -115,22 +115,22 @@
 
           <!-- Total Amount -->
           <div class="mb-4">
-            <p class="text-lg font-bold">Total: ${{ getTotalAmount(order).toFixed(2) }}</p>
+            <p class="text-lg font-bold">Total: ₱{{ getTotalAmount(order).toFixed(2) }}</p>
           </div>
 
           <!-- Action Buttons -->
-          <div class="card-actions justify-end">
+          <div class="card-actions justify-end gap-2">
             <button
               *ngIf="canAdvanceStatus(order.status)"
               (click)="advanceOrderStatus(order)"
-              class="btn btn-primary btn-sm"
+              class="btn btn-primary btn-sm px-4"
             >
               Mark as {{ getNextStatus(order.status) }}
             </button>
             <button
               *ngIf="order.status !== 'cancelled' && order.status !== 'completed'"
               (click)="cancelOrder(order.id)"
-              class="btn btn-error btn-sm"
+              class="btn btn-error btn-sm px-4"
             >
               Cancel Order
             </button>

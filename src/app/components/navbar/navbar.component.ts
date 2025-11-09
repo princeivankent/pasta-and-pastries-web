@@ -168,8 +168,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
           customerInfo.phone = defaultAddress.phoneNumber;
         }
 
-        // Determine order type based on whether address exists
-        const orderType = defaultAddress ? 'delivery' : 'pickup';
+        // Default order type is 'delivery'
+        const orderType = 'delivery';
 
         // Create the order
         this.checkoutService.createOrder(orderType, customerInfo).subscribe({
@@ -190,15 +190,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.log('Could not fetch address:', error);
-        // Proceed with pickup order if address fetch fails
+        // Proceed with delivery order if address fetch fails
         const customerInfo = {
           name: this.currentUser?.displayName || undefined,
           email: this.currentUser?.email || undefined
         };
 
-        this.checkoutService.createOrder('pickup', customerInfo).subscribe({
+        this.checkoutService.createOrder('delivery', customerInfo).subscribe({
           next: (order) => {
-            this.toastService.success(`Order created successfully! Order #${order.id.substring(0, 8)}... (Pickup) - Total: ₱${order.totalAmount.toFixed(2)}`, 5000);
+            this.toastService.success(`Order created successfully! Order #${order.id.substring(0, 8)}... (Delivery) - Total: ₱${order.totalAmount.toFixed(2)}`, 5000);
             this.cartService.clearCart();
             this.updateCart();
             this.closeCart();
