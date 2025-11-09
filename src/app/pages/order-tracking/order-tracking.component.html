@@ -1,0 +1,181 @@
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+  <!-- Page Header -->
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-center mb-2">Track Your Orders</h1>
+    <p class="text-center text-base-content/70">Monitor your order status in real-time</p>
+  </div>
+
+  <!-- Authentication Required Message -->
+  @if (!isAuthenticated) {
+    <div class="flex flex-col items-center justify-center min-h-[400px]">
+      <div class="card bg-base-200 shadow-xl max-w-md w-full">
+        <div class="card-body text-center">
+          <h2 class="card-title justify-center text-2xl">Sign In Required</h2>
+          <p class="py-4">Please sign in with Google to view and track your orders.</p>
+          <div class="card-actions justify-center">
+            <button (click)="signIn()" class="btn btn-primary">
+              <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Sign in with Google
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading && isAuthenticated) {
+    <div class="flex justify-center items-center min-h-[400px]">
+      <span class="loading loading-spinner loading-lg"></span>
+    </div>
+  }
+
+  <!-- Error Message -->
+  @if (errorMessage && !isLoading) {
+    <div class="alert alert-error shadow-lg max-w-2xl mx-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Orders List -->
+  @if (!isLoading && isAuthenticated && orders.length > 0) {
+    <div class="space-y-6">
+      @for (order of orders; track order.id) {
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+          <div class="card-body">
+            <!-- Order Header -->
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div>
+                <h2 class="card-title text-2xl">Order #{{ order.id }}</h2>
+                <p class="text-sm text-base-content/70">{{ formatDate(order.orderDate) }}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="badge badge-lg {{ getStatusClass(order.status) }} gap-2">
+                  <span>{{ getStatusIcon(order.status) }}</span>
+                  <span>{{ getStatusText(order.status) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Progress Timeline -->
+            <div class="divider"></div>
+
+            <div class="w-full">
+              <ul class="steps steps-vertical lg:steps-horizontal w-full">
+                <li class="step" [class.step-primary]="order.status === 'pending' || order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready' || order.status === 'completed'">
+                  <span class="hidden lg:inline">Pending</span>
+                </li>
+                <li class="step" [class.step-primary]="order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready' || order.status === 'completed'">
+                  <span class="hidden lg:inline">Confirmed</span>
+                </li>
+                <li class="step" [class.step-primary]="order.status === 'preparing' || order.status === 'ready' || order.status === 'completed'">
+                  <span class="hidden lg:inline">Preparing</span>
+                </li>
+                <li class="step" [class.step-primary]="order.status === 'ready' || order.status === 'completed'">
+                  <span class="hidden lg:inline">Ready</span>
+                </li>
+                <li class="step" [class.step-primary]="order.status === 'completed'">
+                  <span class="hidden lg:inline">Completed</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Order Details -->
+            <div class="divider"></div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Order Items -->
+              <div>
+                <h3 class="font-semibold mb-2">Items:</h3>
+                <ul class="space-y-1">
+                  @for (item of order.items; track item.product.id) {
+                    <li class="text-sm">
+                      {{ item.quantity }}x {{ item.product.name }}
+                      <span class="text-base-content/70">({{ formatCurrency(item.product.price * item.quantity) }})</span>
+                    </li>
+                  }
+                </ul>
+              </div>
+
+              <!-- Order Info -->
+              <div class="space-y-2">
+                <div>
+                  <span class="font-semibold">Order Type:</span>
+                  <span class="ml-2 badge {{ order.orderType === 'delivery' ? 'badge-primary' : 'badge-secondary' }}">
+                    {{ order.orderType === 'delivery' ? '🚚 Delivery' : '🏪 Pickup' }}
+                  </span>
+                </div>
+
+                @if (order.customerName) {
+                  <div>
+                    <span class="font-semibold">Name:</span>
+                    <span class="ml-2">{{ order.customerName }}</span>
+                  </div>
+                }
+
+                @if (order.customerEmail) {
+                  <div>
+                    <span class="font-semibold">Email:</span>
+                    <span class="ml-2">{{ order.customerEmail }}</span>
+                  </div>
+                }
+
+                @if (order.customerPhone) {
+                  <div>
+                    <span class="font-semibold">Phone:</span>
+                    <span class="ml-2">{{ order.customerPhone }}</span>
+                  </div>
+                }
+
+                @if (order.deliveryAddress) {
+                  <div>
+                    <span class="font-semibold">Delivery Address:</span>
+                    <span class="ml-2">{{ order.deliveryAddress }}</span>
+                  </div>
+                }
+
+                @if (order.specialInstructions) {
+                  <div>
+                    <span class="font-semibold">Special Instructions:</span>
+                    <span class="ml-2 text-sm">{{ order.specialInstructions }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Order Total -->
+            <div class="divider"></div>
+            <div class="flex justify-between items-center">
+              <span class="text-xl font-bold">Total:</span>
+              <span class="text-2xl font-bold text-primary">{{ formatCurrency(order.totalAmount) }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- No Orders State -->
+  @if (!isLoading && isAuthenticated && orders.length === 0) {
+    <div class="flex flex-col items-center justify-center min-h-[400px]">
+      <div class="card bg-base-200 shadow-xl max-w-md w-full">
+        <div class="card-body text-center">
+          <div class="text-6xl mb-4">🍝</div>
+          <h2 class="card-title justify-center text-2xl">No Orders Yet</h2>
+          <p class="py-4">You haven't placed any orders yet. Start exploring our delicious menu!</p>
+          <div class="card-actions justify-center">
+            <a href="/menu" class="btn btn-primary">Browse Menu</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

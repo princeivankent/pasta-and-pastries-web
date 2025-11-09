@@ -1,8 +1,11 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CartService } from './cart.service';
+import { AuthService } from './auth.service';
 import { Order } from '../models/order';
 import { CartItem } from '../models/cart-item';
+import { Firestore, collection, addDoc, query, where, getDocs, onSnapshot, doc, getDoc, Timestamp } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +13,11 @@ import { CartItem } from '../models/cart-item';
 export class CheckoutService {
   private readonly ORDERS_STORAGE_KEY = 'pasta-haus-orders';
   private isBrowser: boolean;
+  private firestore: Firestore = inject(Firestore);
 
   constructor(
     private cartService: CartService,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -110,5 +115,99 @@ export class CheckoutService {
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 9);
     return `ORDER-${timestamp}-${random}`.toUpperCase();
+  }
+
+  /**
+   * Get user's orders from Firestore with real-time updates
+   * Requires user authentication
+   */
+  getUserOrdersRealtime(): Observable<Order[]> {
+    return new Observable(observer => {
+      const user = this.authService.getCurrentUser();
+
+      if (!user) {
+        observer.error('User not authenticated');
+        return;
+      }
+
+      const ordersCollection = collection(this.firestore, 'orders');
+      const userOrdersQuery = query(ordersCollection, where('userId', '==', user.uid));
+
+      // Set up real-time listener
+      const unsubscribe = onSnapshot(
+        userOrdersQuery,
+        (snapshot) => {
+          const orders: Order[] = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              items: data['items'] || [],
+              totalAmount: data['totalAmount'] || 0,
+              customerName: data['customerName'],
+              customerEmail: data['customerEmail'],
+              customerPhone: data['customerPhone'],
+              deliveryAddress: data['deliveryAddress'],
+              orderType: data['orderType'] || 'pickup',
+              specialInstructions: data['specialInstructions'],
+              orderDate: data['orderDate']?.toDate() || new Date(),
+              status: data['status'] || 'pending'
+            } as Order;
+          });
+
+          // Sort by order date (newest first)
+          orders.sort((a, b) => b.orderDate.getTime() - a.orderDate.getTime());
+          observer.next(orders);
+        },
+        (error) => {
+          console.error('Error listening to orders:', error);
+          observer.error(error);
+        }
+      );
+
+      // Return cleanup function
+      return () => unsubscribe();
+    });
+  }
+
+  /**
+   * Get a specific order with real-time updates
+   */
+  getOrderRealtimeById(orderId: string): Observable<Order | null> {
+    return new Observable(observer => {
+      const orderDocRef = doc(this.firestore, 'orders', orderId);
+
+      const unsubscribe = onSnapshot(
+        orderDocRef,
+        (docSnapshot) => {
+          if (!docSnapshot.exists()) {
+            observer.next(null);
+            return;
+          }
+
+          const data = docSnapshot.data();
+          const order: Order = {
+            id: docSnapshot.id,
+            items: data['items'] || [],
+            totalAmount: data['totalAmount'] || 0,
+            customerName: data['customerName'],
+            customerEmail: data['customerEmail'],
+            customerPhone: data['customerPhone'],
+            deliveryAddress: data['deliveryAddress'],
+            orderType: data['orderType'] || 'pickup',
+            specialInstructions: data['specialInstructions'],
+            orderDate: data['orderDate']?.toDate() || new Date(),
+            status: data['status'] || 'pending'
+          };
+
+          observer.next(order);
+        },
+        (error) => {
+          console.error('Error listening to order:', error);
+          observer.error(error);
+        }
+      );
+
+      return () => unsubscribe();
+    });
   }
 }
