@@ -22,6 +22,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedImageUrl: string = '';
   selectedImageName: string = '';
 
+  // Swipe/Drag functionality
+  isDragging: boolean = false;
+  startX: number = 0;
+  currentX: number = 0;
+  dragOffset: number = 0;
+  threshold: number = 50; // Minimum distance to trigger slide change
+  wasDragged: boolean = false; // Track if user dragged to prevent click
+
   constructor(
     private productsService: ProductsService,
     private testimonialsService: TestimonialsService
@@ -80,6 +88,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   openImageModal(imageUrl: string, name: string): void {
+    // Prevent modal from opening if user was dragging
+    if (this.wasDragged) {
+      this.wasDragged = false;
+      return;
+    }
+
     this.selectedImageUrl = imageUrl;
     this.selectedImageName = name;
     const modal = document.getElementById('testimonial_image_modal') as HTMLDialogElement;
@@ -93,5 +107,109 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (modal) {
       modal.close();
     }
+  }
+
+  // Touch events for mobile
+  onTouchStart(event: TouchEvent): void {
+    this.startX = event.touches[0].clientX;
+    this.isDragging = true;
+    this.pauseAutoRotate();
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    if (!this.isDragging) return;
+    this.currentX = event.touches[0].clientX;
+    this.dragOffset = this.currentX - this.startX;
+  }
+
+  onTouchEnd(): void {
+    if (!this.isDragging) return;
+
+    // Mark as dragged if moved more than a few pixels
+    if (Math.abs(this.dragOffset) > 5) {
+      this.wasDragged = true;
+    }
+
+    this.handleSwipe();
+    this.isDragging = false;
+    this.dragOffset = 0;
+    this.resumeAutoRotate();
+
+    // Reset wasDragged after a short delay
+    setTimeout(() => {
+      this.wasDragged = false;
+    }, 100);
+  }
+
+  // Mouse events for desktop
+  onMouseDown(event: MouseEvent): void {
+    this.startX = event.clientX;
+    this.isDragging = true;
+    this.pauseAutoRotate();
+    event.preventDefault(); // Prevent text selection while dragging
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (!this.isDragging) return;
+    this.currentX = event.clientX;
+    this.dragOffset = this.currentX - this.startX;
+  }
+
+  onMouseUp(): void {
+    if (!this.isDragging) return;
+
+    // Mark as dragged if moved more than a few pixels
+    if (Math.abs(this.dragOffset) > 5) {
+      this.wasDragged = true;
+    }
+
+    this.handleSwipe();
+    this.isDragging = false;
+    this.dragOffset = 0;
+    this.resumeAutoRotate();
+
+    // Reset wasDragged after a short delay
+    setTimeout(() => {
+      this.wasDragged = false;
+    }, 100);
+  }
+
+  onMouseLeave(): void {
+    if (this.isDragging) {
+      // Mark as dragged if moved more than a few pixels
+      if (Math.abs(this.dragOffset) > 5) {
+        this.wasDragged = true;
+      }
+
+      this.handleSwipe();
+      this.isDragging = false;
+      this.dragOffset = 0;
+      this.resumeAutoRotate();
+
+      // Reset wasDragged after a short delay
+      setTimeout(() => {
+        this.wasDragged = false;
+      }, 100);
+    }
+  }
+
+  // Handle swipe logic
+  private handleSwipe(): void {
+    if (Math.abs(this.dragOffset) > this.threshold) {
+      if (this.dragOffset > 0) {
+        // Swiped right - go to previous slide
+        this.prevSlide();
+      } else {
+        // Swiped left - go to next slide
+        this.nextSlide();
+      }
+    }
+  }
+
+  // Get the transform style for the carousel
+  getCarouselTransform(): string {
+    const baseOffset = this.currentSlide * 100;
+    const dragPercentage = this.isDragging ? (this.dragOffset / window.innerWidth) * 100 : 0;
+    return `translateX(-${baseOffset - dragPercentage}%)`;
   }
 }
