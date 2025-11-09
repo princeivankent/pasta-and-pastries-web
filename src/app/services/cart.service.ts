@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CartItem } from '../models/cart-item';
 import { Product } from '../models/product';
 
@@ -7,15 +8,25 @@ import { Product } from '../models/product';
 })
 export class CartService {
   private readonly CART_STORAGE_KEY = 'pasta-haus-cart';
+  private isBrowser: boolean;
 
-  constructor() { }
+  constructor(@Inject(PLATFORM_ID) platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   getCartItems(): CartItem[] {
+    if (!this.isBrowser) {
+      return [];
+    }
     const cartData = localStorage.getItem(this.CART_STORAGE_KEY);
     return cartData ? JSON.parse(cartData) : [];
   }
 
   addToCart(product: Product, quantity: number, specialInstructions?: string): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     const cart = this.getCartItems();
 
     // Check if product already exists in cart
@@ -40,12 +51,18 @@ export class CartService {
   }
 
   removeFromCart(index: number): void {
+    if (!this.isBrowser) {
+      return;
+    }
     const cart = this.getCartItems();
     cart.splice(index, 1);
     this.saveCart(cart);
   }
 
   updateQuantity(index: number, quantity: number): void {
+    if (!this.isBrowser) {
+      return;
+    }
     const cart = this.getCartItems();
     if (cart[index] && quantity > 0) {
       cart[index].quantity = quantity;
@@ -54,6 +71,9 @@ export class CartService {
   }
 
   clearCart(): void {
+    if (!this.isBrowser) {
+      return;
+    }
     localStorage.removeItem(this.CART_STORAGE_KEY);
   }
 
@@ -68,6 +88,9 @@ export class CartService {
   }
 
   private saveCart(cart: CartItem[]): void {
+    if (!this.isBrowser) {
+      return;
+    }
     localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(cart));
   }
 }
