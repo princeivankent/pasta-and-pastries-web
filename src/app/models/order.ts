@@ -12,4 +12,5 @@ export interface Order {
   specialInstructions?: string;
   orderDate: Date;
   status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled';
+  userId?: string; // Firebase Auth user ID (required in production)
 }

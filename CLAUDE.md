@@ -70,10 +70,14 @@ src/app/
 ```
 
 ### Data Management
-- **Services**: Injectable services in `src/app/services/` provide mock data
+- **Services**: Injectable services in `src/app/services/` manage data and business logic
 - **Models**: TypeScript interfaces in `src/app/models/` define data structures
-- **Current Data**: 8 mock products (4 pasta, 4 pastries), 4 testimonials
-- **Future**: Replace mock data in services with real API calls or CMS integration
+- **Firebase/Firestore Integration**:
+  - Products fetched from Firestore `products` collection
+  - Shopping cart synced to Firestore `carts/{userId}` collection (authenticated users only)
+  - Orders stored in Firestore `orders` collection with user authentication
+  - Hybrid mode: Uses `environment.useMockData` flag to switch between localStorage (dev) and Firestore (prod)
+- **Authentication**: Google Sign-In via Firebase Auth (required for checkout and order tracking)
 
 ### Routing
 - Flat routing structure: `/`, `/menu`, `/about`, `/contact`
@@ -82,7 +86,10 @@ src/app/
 
 ### State Management
 Simple service-based state management:
-- `ProductsService`: Product catalog and filtering
+- `ProductsService`: Product catalog and filtering (Firestore integration)
+- `CartService`: Shopping cart management with Firestore sync
+- `CheckoutService`: Order creation and tracking
+- `AuthService`: Firebase Authentication (Google Sign-In)
 - `TestimonialsService`: Customer testimonials
 
 No complex state management (NgRx, Akita) is used.
@@ -97,10 +104,45 @@ No complex state management (NgRx, Akita) is used.
 
 4. **DaisyUI Theme**: Currently using "cupcake" theme. To change, edit `tailwind.config.js` `daisyui.themes` array.
 
+5. **Firestore Security Rules**:
+   - Users can only access their own cart and orders
+   - Products are read-only for all users
+   - Authentication required for cart sync and order operations
+   - Rules defined in `firestore.rules`
+
+6. **Firestore Data Constraints**:
+   - Cannot save `undefined` values to Firestore documents
+   - All optional fields must be conditionally added only if they have values
+   - Date objects must be converted to Firestore `Timestamp` before saving
+
 ## Project-Specific Patterns
 
 ### Adding New Products
-Edit `src/app/services/products.service.ts` and add to the `products` array following the `Product` interface.
+Products are now stored in Firestore. To add new products:
+1. Add documents to the Firestore `products` collection
+2. Follow the `Product` interface structure:
+   - Required fields: `id`, `name`, `category`, `description`, `price`, `image`
+   - Optional fields: `ingredients[]`, `isBestSeller`, `variants[]`
+3. For development with mock data, edit `src/app/services/products.service.ts`
+
+### Cart & Order Management
+**Cart Persistence:**
+- Anonymous users: Cart stored in localStorage only
+- Authenticated users: Cart automatically synced to Firestore `carts/{userId}`
+- Sign-in behavior: localStorage cart merges with Firestore cart (quantities combine for matching items)
+
+**Order Flow:**
+1. **Authentication Required**: Users must sign in before checkout (enforced in both dev and production)
+2. **Order Creation**: Orders saved to Firestore `orders` collection with userId
+3. **Order Statuses**: `pending` → `confirmed` → `preparing` → `ready` → `completed` (or `cancelled`)
+4. **Order Tracking**: Users can only view their own orders (filtered by userId)
+
+**Important Service Methods:**
+- `CartService.addToCart()`: Returns Promise (async for Firestore sync)
+- `CartService.removeFromCart()`: Returns Promise
+- `CartService.updateQuantity()`: Returns Promise
+- `CartService.clearCart()`: Returns Promise
+- `CheckoutService.createOrder()`: Returns Observable, requires authentication
 
 ### Adding New Pages
 1. Generate: `ng generate component pages/page-name --standalone --skip-tests`
@@ -123,9 +165,43 @@ Mobile-first with DaisyUI/Tailwind breakpoints:
 - `lg:`: desktop (1024px+)
 - `xl:`: large desktop (1280px+)
 
+## Firebase Configuration
+
+### Environment Setup
+The application uses `environment.useMockData` flag to control data sources:
+- **Development** (`useMockData: true`): Uses localStorage for cart/orders, optional auth
+- **Production** (`useMockData: false`): Uses Firestore for all data, requires auth
+
+### Firestore Collections Structure
+```
+products/              # Product catalog
+  {productId}/
+    - name, category, description, price, image
+    - ingredients[], isBestSeller, variants[]
+
+carts/                 # User shopping carts
+  {userId}/
+    - items: CartItem[]
+    - updatedAt: Timestamp
+
+orders/                # Customer orders
+  {orderId}/
+    - userId, items[], totalAmount, status
+    - orderType, orderDate (Timestamp)
+    - customerName, customerEmail, customerPhone (optional)
+    - deliveryAddress, specialInstructions (optional)
+```
+
+### Authentication
+- Provider: Google Sign-In only
+- Required for: Cart sync, checkout, order tracking
+- Flow: Popup-based authentication
+- Service: `AuthService` (`src/app/services/auth.service.ts`)
+
 ## Documentation Files
 
 - `decisions.md`: Architectural decisions and rationale
 - `progress.md`: Implementation progress and feature checklist
 - `bugs.md`: Known issues and future improvements
+- `FIRESTORE_INTEGRATION.md`: Firestore integration guide and setup
 - Follow the coding standard for maintainable code and always check if there's an existing component available in Tailwind and DaisyUI before creating a new one. And always follow the coding/pattern of these UI framework.

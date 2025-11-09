@@ -32,8 +32,18 @@ export class MenuComponent implements OnInit {
       type: 'website'
     });
 
-    this.allProducts = this.productsService.getAllProducts();
-    this.filteredProducts = this.allProducts;
+    // Load all products (now returns Observable)
+    this.productsService.getAllProducts().subscribe({
+      next: (products) => {
+        this.allProducts = products;
+        this.filteredProducts = this.allProducts;
+      },
+      error: (error) => {
+        console.error('Error loading products:', error);
+        this.allProducts = [];
+        this.filteredProducts = [];
+      }
+    });
   }
 
   filterByCategory(category: 'all' | 'pasta' | 'pastry'): void {
@@ -41,7 +51,8 @@ export class MenuComponent implements OnInit {
     if (category === 'all') {
       this.filteredProducts = this.allProducts;
     } else {
-      this.filteredProducts = this.productsService.getProductsByCategory(category);
+      // Filter from already loaded products to avoid extra Firestore reads
+      this.filteredProducts = this.allProducts.filter(p => p.category === category);
     }
   }
 }

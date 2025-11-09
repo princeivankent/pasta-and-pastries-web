@@ -127,15 +127,29 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   proceedToCheckout(): void {
+    // Check if user is authenticated before proceeding
+    if (!this.currentUser) {
+      const shouldSignIn = confirm('Please sign in to place your order.\n\nWould you like to sign in now?');
+      if (shouldSignIn) {
+        this.signIn();
+      }
+      return;
+    }
+
     // For now, just create a pickup order
     // In a real app, this would navigate to a checkout page
-    const order = this.checkoutService.createOrder('pickup');
-    if (order) {
-      alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}\n\nThank you for your order!`);
-      this.cartService.clearCart();
-      this.updateCart();
-      this.closeCart();
-    }
+    this.checkoutService.createOrder('pickup').subscribe({
+      next: (order) => {
+        alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}\n\nThank you for your order!`);
+        this.cartService.clearCart();
+        this.updateCart();
+        this.closeCart();
+      },
+      error: (error) => {
+        console.error('Error creating order:', error);
+        alert(`Failed to create order: ${error.message}\n\nPlease try again or contact support.`);
+      }
+    });
   }
 
   toggleUserMenu(): void {
