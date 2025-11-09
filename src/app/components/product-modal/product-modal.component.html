@@ -1,0 +1,63 @@
+<!-- Modal backdrop and container -->
+<div *ngIf="product" class="modal modal-open" (click)="close()">
+  <div class="modal-box max-w-4xl relative p-6" (click)="$event.stopPropagation()">
+    <!-- Close button -->
+    <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3 z-10" (click)="close()">✕</button>
+
+    <!-- Modal content -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Product image -->
+      <figure class="w-full">
+        <div class="w-full aspect-square flex items-center justify-center bg-base-200 rounded-2xl overflow-hidden">
+          <img [src]="product.image" [alt]="product.name" class="w-full h-full object-cover" />
+        </div>
+      </figure>
+
+      <!-- Product details -->
+      <div class="flex flex-col space-y-3">
+        <div>
+          <h3 class="text-2xl font-heading font-bold text-neutral">{{ product.name }}</h3>
+          <p class="text-2xl font-bold text-olive-green mt-1">₱{{ product.price }}</p>
+          <p class="text-sm text-base-content/70 leading-relaxed font-body mt-2">{{ product.description }}</p>
+        </div>
+
+        <!-- Quantity selector -->
+        <div class="form-control">
+          <label class="label py-1">
+            <span class="label-text font-semibold text-sm">Quantity</span>
+          </label>
+          <div class="flex items-center gap-3">
+            <button class="btn btn-sm btn-circle btn-outline" (click)="decrementQuantity()">−</button>
+            <input
+              type="number"
+              [(ngModel)]="quantity"
+              min="1"
+              class="input input-sm input-bordered w-16 text-center"
+              readonly
+            />
+            <button class="btn btn-sm btn-circle btn-outline" (click)="incrementQuantity()">+</button>
+          </div>
+        </div>
+
+        <!-- Special instructions -->
+        <div class="form-control">
+          <label class="label py-1">
+            <span class="label-text font-semibold text-sm">Special Instructions (Optional)</span>
+          </label>
+          <textarea
+            [(ngModel)]="specialInstructions"
+            class="textarea textarea-bordered textarea-sm h-16 text-sm"
+            placeholder="Any special requests or dietary requirements?"
+          ></textarea>
+        </div>
+
+        <!-- Add to cart button -->
+        <div class="mt-auto pt-2">
+          <button class="btn btn-lg w-full bg-olive-green text-white hover:bg-olive-green/90 border-none" (click)="addToCart()">
+            Add to Cart - ₱{{ product.price * quantity }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
