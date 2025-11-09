@@ -5,12 +5,14 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout.service';
 import { AuthService } from '../../services/auth.service';
+import { AddressService } from '../../services/address.service';
 import { CartItem } from '../../models/cart-item';
 import { User } from '@angular/fire/auth';
+import { AddressDialogComponent } from '../address-dialog/address-dialog.component';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, AddressDialogComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
@@ -23,6 +25,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   cartBadgePulse = false;
   currentUser: User | null = null;
   isUserMenuOpen = false;
+  isAddressDialogOpen = false;
+  showWelcomeAddressDialog = false;
   private cartCheckInterval: any;
   private isBrowser: boolean;
   private previousCartCount = 0;
@@ -31,6 +35,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     public cartService: CartService,
     public checkoutService: CheckoutService,
     public authService: AuthService,
+    private addressService: AddressService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -136,18 +141,68 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // For now, just create a delivery order
-    // In a real app, this would navigate to a checkout page
-    this.checkoutService.createOrder('delivery').subscribe({
-      next: (order) => {
-        alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}\n\nThank you for your order!`);
-        this.cartService.clearCart();
-        this.updateCart();
-        this.closeCart();
+    // Get user's default address and create order
+    this.addressService.getDefaultAddress().subscribe({
+      next: (defaultAddress) => {
+        // Prepare customer info with address
+        const customerInfo: any = {
+          name: this.currentUser?.displayName || undefined,
+          email: this.currentUser?.email || undefined
+        };
+
+        // If user has a default address, use it for delivery
+        if (defaultAddress) {
+          const fullAddress = [
+            defaultAddress.street,
+            defaultAddress.barangay,
+            defaultAddress.city,
+            defaultAddress.province,
+            defaultAddress.postalCode,
+            defaultAddress.country
+          ].filter(Boolean).join(', ');
+
+          customerInfo.deliveryAddress = fullAddress;
+          customerInfo.phone = defaultAddress.phoneNumber;
+        }
+
+        // Determine order type based on whether address exists
+        const orderType = defaultAddress ? 'delivery' : 'pickup';
+
+        // Create the order
+        this.checkoutService.createOrder(orderType, customerInfo).subscribe({
+          next: (order) => {
+            const addressInfo = order.deliveryAddress ? `\nDelivery Address: ${order.deliveryAddress}` : '\n(Pickup Order)';
+            alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}${addressInfo}\n\nThank you for your order! You can track your order in the Orders page.`);
+            this.cartService.clearCart();
+            this.updateCart();
+            this.closeCart();
+          },
+          error: (error) => {
+            console.error('Error creating order:', error);
+            alert(`Failed to create order: ${error.message}\n\nPlease try again or contact support.`);
+          }
+        });
       },
       error: (error) => {
-        console.error('Error creating order:', error);
-        alert(`Failed to create order: ${error.message}\n\nPlease try again or contact support.`);
+        console.log('Could not fetch address:', error);
+        // Proceed with pickup order if address fetch fails
+        const customerInfo = {
+          name: this.currentUser?.displayName || undefined,
+          email: this.currentUser?.email || undefined
+        };
+
+        this.checkoutService.createOrder('pickup', customerInfo).subscribe({
+          next: (order) => {
+            alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}\n(Pickup Order)\n\nThank you for your order!`);
+            this.cartService.clearCart();
+            this.updateCart();
+            this.closeCart();
+          },
+          error: (error) => {
+            console.error('Error creating order:', error);
+            alert(`Failed to create order: ${error.message}\n\nPlease try again or contact support.`);
+          }
+        });
       }
     });
   }
@@ -162,11 +217,40 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   async signIn(): Promise<void> {
     try {
-      await this.authService.signInWithGoogle();
+      const user = await this.authService.signInWithGoogle();
       this.closeUserMenu();
+
+      // Check if user has any addresses, if not show welcome dialog
+      if (user) {
+        this.addressService.getUserAddresses().subscribe({
+          next: (addresses) => {
+            if (addresses.length === 0) {
+              // New user, show welcome address dialog
+              this.showWelcomeAddressDialog = true;
+              this.isAddressDialogOpen = true;
+            }
+          },
+          error: (error) => {
+            console.log('Could not check user addresses:', error);
+            // Show welcome dialog anyway for new users
+            this.showWelcomeAddressDialog = true;
+            this.isAddressDialogOpen = true;
+          }
+        });
+      }
     } catch (error) {
       console.error('Failed to sign in:', error);
     }
+  }
+
+  closeAddressDialog(): void {
+    this.isAddressDialogOpen = false;
+    this.showWelcomeAddressDialog = false;
+  }
+
+  onAddressSaved(): void {
+    console.log('Address saved successfully!');
+    this.closeAddressDialog();
   }
 
   async signOut(): Promise<void> {

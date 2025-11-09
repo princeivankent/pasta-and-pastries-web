@@ -330,3 +330,11 @@
     </div>
   </div>
 </header>
+
+<!-- Address Dialog -->
+<app-address-dialog
+  [isOpen]="isAddressDialogOpen"
+  [isWelcomeDialog]="showWelcomeAddressDialog"
+  (closeDialog)="closeAddressDialog()"
+  (addressSaved)="onAddressSaved()"
+></app-address-dialog>

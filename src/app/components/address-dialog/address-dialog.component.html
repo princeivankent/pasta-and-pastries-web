@@ -1,0 +1,197 @@
+<!-- Address Dialog Modal -->
+<div *ngIf="isOpen" class="modal modal-open">
+  <div class="modal-box max-w-2xl">
+    <!-- Dialog Header -->
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <h3 class="font-heading font-bold text-2xl text-base-content">
+          {{ isWelcomeDialog ? 'Welcome! 🎉' : 'Add Delivery Address' }}
+        </h3>
+        <p class="text-sm text-base-content/70 mt-1">
+          {{ isWelcomeDialog ? 'Let\'s set up your delivery address to get started!' : 'Add a new delivery address for your orders' }}
+        </p>
+      </div>
+      <button
+        *ngIf="!isWelcomeDialog"
+        (click)="close()"
+        class="btn btn-sm btn-circle btn-ghost"
+        aria-label="Close dialog"
+      >✕</button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Address Form -->
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Street Address -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-semibold">Street Address <span class="text-error">*</span></span>
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="formData.street"
+          name="street"
+          placeholder="e.g., 123 Main Street, Unit 4B"
+          class="input input-bordered w-full"
+          required
+        />
+      </div>
+
+      <!-- Barangay (Optional) -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-semibold">Barangay</span>
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="formData.barangay"
+          name="barangay"
+          placeholder="e.g., Barangay San Antonio"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <!-- City and Province -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">City <span class="text-error">*</span></span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="formData.city"
+            name="city"
+            placeholder="e.g., Manila"
+            class="input input-bordered w-full"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">Province <span class="text-error">*</span></span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="formData.province"
+            name="province"
+            placeholder="e.g., Metro Manila"
+            class="input input-bordered w-full"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Postal Code and Country -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">Postal Code</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="formData.postalCode"
+            name="postalCode"
+            placeholder="e.g., 1000"
+            class="input input-bordered w-full"
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">Country</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="formData.country"
+            name="country"
+            class="input input-bordered w-full"
+            readonly
+          />
+        </div>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-semibold">Phone Number</span>
+        </label>
+        <input
+          type="tel"
+          [(ngModel)]="formData.phoneNumber"
+          name="phoneNumber"
+          placeholder="e.g., +63 912 345 6789"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <!-- Address Label -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text font-semibold">Label</span>
+        </label>
+        <select
+          [(ngModel)]="formData.label"
+          name="label"
+          class="select select-bordered w-full"
+        >
+          <option value="Home">Home</option>
+          <option value="Work">Work</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <!-- Set as Default -->
+      <div class="form-control">
+        <label class="label cursor-pointer justify-start gap-3">
+          <input
+            type="checkbox"
+            [(ngModel)]="formData.isDefault"
+            name="isDefault"
+            class="checkbox checkbox-primary"
+          />
+          <span class="label-text">Set as default delivery address</span>
+        </label>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="modal-action">
+        <button
+          *ngIf="isWelcomeDialog"
+          type="button"
+          (click)="skip()"
+          class="btn btn-ghost"
+          [disabled]="isSubmitting"
+        >
+          Skip for now
+        </button>
+        <button
+          *ngIf="!isWelcomeDialog"
+          type="button"
+          (click)="close()"
+          class="btn btn-ghost"
+          [disabled]="isSubmitting"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn bg-olive-green text-white hover:bg-olive-green/90 border-none"
+          [disabled]="isSubmitting"
+        >
+          <span *ngIf="!isSubmitting">Save Address</span>
+          <span *ngIf="isSubmitting" class="loading loading-spinner loading-sm"></span>
+          <span *ngIf="isSubmitting">Saving...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="modal-backdrop bg-black/50" (click)="close()"></div>
+</div>
