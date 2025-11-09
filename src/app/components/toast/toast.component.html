@@ -1,0 +1,29 @@
+<!-- Toast Container -->
+<div class="toast toast-top toast-end z-[100]">
+  <div
+    *ngFor="let toast of toasts"
+    [class]="getAlertClass(toast.type)"
+    class="animate-in slide-in-from-top-5 fade-in duration-300"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6 shrink-0 stroke-current"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        [attr.d]="getIcon(toast.type)"
+      />
+    </svg>
+    <span class="font-body">{{ toast.message }}</span>
+    <button
+      (click)="remove(toast.id)"
+      class="btn btn-sm btn-ghost btn-circle"
+    >
+      ✕
+    </button>
+  </div>
+</div>

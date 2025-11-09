@@ -53,8 +53,35 @@
 
         <!-- Add to cart button -->
         <div class="mt-auto pt-2">
-          <button class="btn btn-lg w-full bg-olive-green text-white hover:bg-olive-green/90 border-none" (click)="addToCart()">
-            Add to Cart - ₱{{ product.price * quantity }}
+          <button
+            [ngClass]="{
+              'btn': true,
+              'btn-lg': true,
+              'w-full': true,
+              'border-none': true,
+              'transition-all': true,
+              'duration-300': true,
+              'bg-olive-green': !justAdded,
+              'text-white': !justAdded,
+              'hover:bg-olive-green/90': !justAdded,
+              'bg-success': justAdded,
+              'text-success-content': justAdded
+            }"
+            [disabled]="isAdding"
+            (click)="addToCart()"
+          >
+            <span *ngIf="!justAdded" class="flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span>Add to Cart - ₱{{ product.price * quantity }}</span>
+            </span>
+            <span *ngIf="justAdded" class="flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Added to Cart!</span>
+            </span>
           </button>
         </div>
       </div>
