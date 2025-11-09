@@ -46,6 +46,3 @@ Thumbs.db
 # Create local copies with real Firebase credentials
 /src/environments/environment.local.ts
 /src/environments/*.local.ts
-
-# Firebase hosting
-.firebase
