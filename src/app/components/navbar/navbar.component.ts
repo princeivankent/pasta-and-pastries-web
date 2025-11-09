@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout.service';
@@ -36,6 +36,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     public checkoutService: CheckoutService,
     public authService: AuthService,
     private addressService: AddressService,
+    private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -172,10 +173,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.checkoutService.createOrder(orderType, customerInfo).subscribe({
           next: (order) => {
             const addressInfo = order.deliveryAddress ? `\nDelivery Address: ${order.deliveryAddress}` : '\n(Pickup Order)';
-            alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}${addressInfo}\n\nThank you for your order! You can track your order in the Orders page.`);
+            alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}${addressInfo}\n\nThank you for your order!`);
             this.cartService.clearCart();
             this.updateCart();
             this.closeCart();
+            // Navigate to orders page
+            this.router.navigate(['/orders']);
           },
           error: (error) => {
             console.error('Error creating order:', error);
@@ -197,6 +200,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
             this.cartService.clearCart();
             this.updateCart();
             this.closeCart();
+            // Navigate to orders page
+            this.router.navigate(['/orders']);
           },
           error: (error) => {
             console.error('Error creating order:', error);

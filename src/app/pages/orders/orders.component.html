@@ -119,25 +119,6 @@
             </div>
           </div>
 
-          <!-- Customer Info (if available) -->
-          <div *ngIf="order.customerName || order.customerEmail || order.customerPhone || order.deliveryAddress" class="mt-4 pt-4 border-t border-base-300">
-            <h3 class="font-semibold text-base-content/80 mb-2">Customer Information:</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-              <p *ngIf="order.customerName">
-                <span class="text-base-content/70">Name:</span> {{ order.customerName }}
-              </p>
-              <p *ngIf="order.customerEmail">
-                <span class="text-base-content/70">Email:</span> {{ order.customerEmail }}
-              </p>
-              <p *ngIf="order.customerPhone">
-                <span class="text-base-content/70">Phone:</span> {{ order.customerPhone }}
-              </p>
-              <p *ngIf="order.deliveryAddress" class="md:col-span-2">
-                <span class="text-base-content/70">Delivery Address:</span> {{ order.deliveryAddress }}
-              </p>
-            </div>
-          </div>
-
           <!-- Special Instructions -->
           <div *ngIf="order.specialInstructions" class="mt-4 pt-4 border-t border-base-300">
             <h3 class="font-semibold text-base-content/80 mb-2">Special Instructions:</h3>
