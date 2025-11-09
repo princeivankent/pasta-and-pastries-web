@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product';
 import { CartService } from '../../services/cart.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-product-modal',
@@ -16,8 +17,13 @@ export class ProductModalComponent {
 
   quantity: number = 1;
   specialInstructions: string = '';
+  isAdding: boolean = false;
+  justAdded: boolean = false;
 
-  constructor(private cartService: CartService) {}
+  constructor(
+    private cartService: CartService,
+    private toastService: ToastService
+  ) {}
 
   close(): void {
     this.closeModal.emit();
@@ -25,9 +31,23 @@ export class ProductModalComponent {
   }
 
   addToCart(): void {
-    if (this.product) {
+    if (this.product && !this.isAdding) {
+      this.isAdding = true;
       this.cartService.addToCart(this.product, this.quantity, this.specialInstructions);
-      this.close();
+
+      // Show success state
+      this.justAdded = true;
+
+      // Show toast notification
+      const quantityText = this.quantity > 1 ? `${this.quantity}x ` : '';
+      this.toastService.success(`${quantityText}${this.product.name} added to cart!`);
+
+      // Close modal after brief delay to show success state
+      setTimeout(() => {
+        this.isAdding = false;
+        this.justAdded = false;
+        this.close();
+      }, 800);
     }
   }
 

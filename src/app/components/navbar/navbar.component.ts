@@ -18,8 +18,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   cartItems: CartItem[] = [];
   cartCount = 0;
   cartTotal = 0;
+  cartBadgePulse = false;
   private cartCheckInterval: any;
   private isBrowser: boolean;
+  private previousCartCount = 0;
 
   constructor(
     public cartService: CartService,
@@ -47,8 +49,23 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   updateCart(): void {
     this.cartItems = this.cartService.getCartItems();
-    this.cartCount = this.cartService.getCartCount();
+    const newCartCount = this.cartService.getCartCount();
     this.cartTotal = this.cartService.getCartTotal();
+
+    // Trigger animation when cart count increases
+    if (newCartCount > this.previousCartCount) {
+      this.triggerCartBadgeAnimation();
+    }
+
+    this.previousCartCount = this.cartCount;
+    this.cartCount = newCartCount;
+  }
+
+  private triggerCartBadgeAnimation(): void {
+    this.cartBadgePulse = true;
+    setTimeout(() => {
+      this.cartBadgePulse = false;
+    }, 600);
   }
 
   toggleMobileMenu() {
