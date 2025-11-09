@@ -98,20 +98,19 @@
                 </div>
               </div>
             </button>
-            <ul tabindex="0" class="mt-3 z-[1] p-3 shadow-lg menu dropdown-content bg-base-100 border border-gray-200 rounded-lg w-56">
-              <li class="px-3 py-2 border-b border-gray-200 mb-2">
-                <div class="text-sm font-semibold text-gray-900 truncate">{{ currentUser.displayName || 'User' }}</div>
-                <div class="text-xs text-gray-500 truncate">{{ currentUser.email }}</div>
-              </li>
-              <li>
-                <button (click)="signOut()" class="text-error hover:bg-error/10 active:bg-error/20 flex items-center gap-2">
+            <div tabindex="0" class="mt-3 z-[1] p-4 shadow-lg dropdown-content bg-base-100 border border-gray-200 rounded-lg min-w-[280px] max-w-[320px]">
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-semibold text-gray-900 truncate">{{ currentUser.displayName || 'User' }}</div>
+                  <div class="text-xs text-gray-500 truncate">{{ currentUser.email }}</div>
+                </div>
+                <button (click)="signOut()" class="btn btn-sm btn-error btn-outline flex-shrink-0" title="Sign out">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                   </svg>
-                  Sign out
                 </button>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -204,28 +203,30 @@
             <span class="text-gray-700 font-medium">Sign in with Google</span>
           </button>
 
-          <div *ngIf="currentUser" class="space-y-3">
-            <div class="flex items-center gap-3 px-4 py-3 bg-base-200 rounded-lg">
-              <div class="w-12 h-12 rounded-full ring-2 ring-olive-green overflow-hidden flex-shrink-0">
-                <img *ngIf="currentUser.photoURL" [src]="currentUser.photoURL" [alt]="currentUser.displayName || 'User'" class="w-full h-full object-cover" />
-                <div *ngIf="!currentUser.photoURL" class="w-full h-full bg-olive-green text-white flex items-center justify-center text-lg font-bold">
-                  {{ (currentUser.displayName || currentUser.email || 'U')[0].toUpperCase() }}
+          <div *ngIf="currentUser" class="bg-base-200 rounded-lg p-3">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3 flex-1 min-w-0">
+                <div class="w-10 h-10 rounded-full ring-2 ring-olive-green overflow-hidden flex-shrink-0">
+                  <img *ngIf="currentUser.photoURL" [src]="currentUser.photoURL" [alt]="currentUser.displayName || 'User'" class="w-full h-full object-cover" />
+                  <div *ngIf="!currentUser.photoURL" class="w-full h-full bg-olive-green text-white flex items-center justify-center text-lg font-bold">
+                    {{ (currentUser.displayName || currentUser.email || 'U')[0].toUpperCase() }}
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-gray-900 truncate">{{ currentUser.displayName || 'User' }}</p>
+                  <p class="text-xs text-gray-500 truncate">{{ currentUser.email }}</p>
                 </div>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-900 truncate">{{ currentUser.displayName || 'User' }}</p>
-                <p class="text-xs text-gray-500 truncate">{{ currentUser.email }}</p>
-              </div>
+              <button
+                (click)="signOut(); closeMobileMenu()"
+                class="btn btn-sm btn-error btn-outline flex-shrink-0"
+                title="Sign out"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              </button>
             </div>
-            <button
-              (click)="signOut(); closeMobileMenu()"
-              class="btn btn-sm btn-error btn-outline w-full flex items-center justify-center gap-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Sign out
-            </button>
           </div>
         </div>
       </div>
