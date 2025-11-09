@@ -39,7 +39,7 @@
           [(ngModel)]="formData.street"
           name="street"
           placeholder="e.g., 123 Main Street, Unit 4B"
-          class="input input-bordered w-full"
+          class="input input-bordered w-full px-4 py-3"
           required
         />
       </div>
@@ -54,7 +54,7 @@
           [(ngModel)]="formData.barangay"
           name="barangay"
           placeholder="e.g., Barangay San Antonio"
-          class="input input-bordered w-full"
+          class="input input-bordered w-full px-4 py-3"
         />
       </div>
 
@@ -69,7 +69,7 @@
             [(ngModel)]="formData.city"
             name="city"
             placeholder="e.g., Manila"
-            class="input input-bordered w-full"
+            class="input input-bordered w-full px-4 py-3"
             required
           />
         </div>
@@ -83,7 +83,7 @@
             [(ngModel)]="formData.province"
             name="province"
             placeholder="e.g., Metro Manila"
-            class="input input-bordered w-full"
+            class="input input-bordered w-full px-4 py-3"
             required
           />
         </div>
@@ -100,7 +100,7 @@
             [(ngModel)]="formData.postalCode"
             name="postalCode"
             placeholder="e.g., 1000"
-            class="input input-bordered w-full"
+            class="input input-bordered w-full px-4 py-3"
           />
         </div>
 
@@ -112,7 +112,7 @@
             type="text"
             [(ngModel)]="formData.country"
             name="country"
-            class="input input-bordered w-full"
+            class="input input-bordered w-full px-4 py-3"
             readonly
           />
         </div>
@@ -128,7 +128,7 @@
           [(ngModel)]="formData.phoneNumber"
           name="phoneNumber"
           placeholder="e.g., +63 912 345 6789"
-          class="input input-bordered w-full"
+          class="input input-bordered w-full px-4 py-3"
         />
       </div>
 
@@ -140,7 +140,7 @@
         <select
           [(ngModel)]="formData.label"
           name="label"
-          class="select select-bordered w-full"
+          class="select select-bordered w-full px-4 py-3"
         >
           <option value="Home">Home</option>
           <option value="Work">Work</option>
@@ -150,12 +150,12 @@
 
       <!-- Set as Default -->
       <div class="form-control">
-        <label class="label cursor-pointer justify-start gap-3">
+        <label class="label cursor-pointer justify-start gap-3 py-3">
           <input
             type="checkbox"
             [(ngModel)]="formData.isDefault"
             name="isDefault"
-            class="checkbox checkbox-primary"
+            class="checkbox checkbox-primary w-5 h-5"
           />
           <span class="label-text">Set as default delivery address</span>
         </label>
@@ -183,7 +183,7 @@
         </button>
         <button
           type="submit"
-          class="btn bg-olive-green text-white hover:bg-olive-green/90 border-none"
+          class="btn bg-olive-green text-white hover:bg-olive-green/90 border-none px-6 py-3"
           [disabled]="isSubmitting"
         >
           <span *ngIf="!isSubmitting">Save Address</span>
