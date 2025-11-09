@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductsService } from '../../services/products.service';
 import { TestimonialsService } from '../../services/testimonials.service';
+import { SeoService } from '../../services/seo.service';
 import { Product } from '../../models/product';
 import { Testimonial } from '../../models/testimonial';
 
@@ -32,10 +33,24 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private productsService: ProductsService,
-    private testimonialsService: TestimonialsService
+    private testimonialsService: TestimonialsService,
+    private seoService: SeoService
   ) {}
 
   ngOnInit(): void {
+    // Set SEO meta tags for home page
+    this.seoService.updateMetaTags({
+      title: 'Pasta & Pastries by Cha - Homemade Lasagna & Freshly Baked Goodies',
+      description: 'Discover delicious homemade pasta and freshly baked pastries at Pasta & Pastries by Cha. Order our famous lasagna, carbonara, and artisan pastries made with love.',
+      keywords: 'homemade pasta, fresh pastries, lasagna, carbonara, bakery, restaurant, homemade food, artisan bread, Italian cuisine',
+      image: '/images/lasagna.jpg',
+      url: 'https://pastaandpastriesbycha.com',
+      type: 'website'
+    });
+
+    // Add LocalBusiness structured data
+    this.seoService.addStructuredData(this.seoService.getLocalBusinessSchema());
+
     this.bestSellers = this.productsService.getBestSellers();
     this.testimonials = this.testimonialsService.getAllTestimonials();
     // Temporarily disabled auto-rotation - can be re-enabled later
