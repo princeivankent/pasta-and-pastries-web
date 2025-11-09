@@ -156,6 +156,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   async signOut(): Promise<void> {
+    // Show confirmation dialog
+    const confirmed = confirm('Are you sure you want to sign out?');
+    if (!confirmed) {
+      return;
+    }
+
     try {
       await this.authService.signOutUser();
       this.closeUserMenu();

@@ -2,11 +2,11 @@
 export const environment = {
   production: true,
   firebase: {
-    apiKey: "YOUR_API_KEY",
+    apiKey: "AIzaSyCLhbGhKbV7b8dcXQX208832t1SKhWRe0A",
     authDomain: "pasta-and-pastries.firebaseapp.com",
     projectId: "pasta-and-pastries",
     storageBucket: "pasta-and-pastries.firebasestorage.app",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    messagingSenderId: "457359953885",
+    appId: "1:457359953885:web:6f81eff80b325d99e73034"
   }
 };
