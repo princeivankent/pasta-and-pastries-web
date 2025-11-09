@@ -136,9 +136,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // For now, just create a pickup order
+    // For now, just create a delivery order
     // In a real app, this would navigate to a checkout page
-    this.checkoutService.createOrder('pickup').subscribe({
+    this.checkoutService.createOrder('delivery').subscribe({
       next: (order) => {
         alert(`Order created successfully! Order ID: ${order.id}\n\nTotal: ₱${order.totalAmount}\n\nThank you for your order!`);
         this.cartService.clearCart();
