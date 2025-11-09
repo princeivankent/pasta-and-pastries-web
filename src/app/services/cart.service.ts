@@ -1,7 +1,15 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CartItem } from '../models/cart-item';
-import { Product } from '../models/product';
+import { Product, ProductVariant } from '../models/product';
+import { Firestore, doc, getDoc, setDoc, Timestamp } from '@angular/fire/firestore';
+import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
+
+interface FirestoreCart {
+  items: CartItem[];
+  updatedAt: Timestamp;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +17,22 @@ import { Product } from '../models/product';
 export class CartService {
   private readonly CART_STORAGE_KEY = 'pasta-haus-cart';
   private isBrowser: boolean;
+  private useMockData = environment.useMockData;
+  private cartSyncInProgress = false;
 
-  constructor(@Inject(PLATFORM_ID) platformId: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) platformId: Object,
+    private firestore: Firestore,
+    private authService: AuthService
+  ) {
     this.isBrowser = isPlatformBrowser(platformId);
+
+    // Subscribe to auth state changes to sync cart
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.handleUserSignIn();
+      }
+    });
   }
 
   getCartItems(): CartItem[] {
@@ -22,59 +43,75 @@ export class CartService {
     return cartData ? JSON.parse(cartData) : [];
   }
 
-  addToCart(product: Product, quantity: number, specialInstructions?: string): void {
+  async addToCart(product: Product, quantity: number, specialInstructions?: string, selectedVariant?: ProductVariant): Promise<void> {
     if (!this.isBrowser) {
       return;
     }
 
     const cart = this.getCartItems();
 
-    // Check if product already exists in cart
+    // Check if product already exists in cart with same variant and instructions
     const existingItemIndex = cart.findIndex(item =>
       item.product.id === product.id &&
-      item.specialInstructions === specialInstructions
+      item.specialInstructions === specialInstructions &&
+      item.selectedVariant?.id === selectedVariant?.id
     );
 
     if (existingItemIndex !== -1) {
-      // Update quantity if item exists with same instructions
+      // Update quantity if item exists with same instructions and variant
       cart[existingItemIndex].quantity += quantity;
     } else {
       // Add new item to cart
       cart.push({
         product,
         quantity,
-        specialInstructions
+        specialInstructions,
+        selectedVariant
       });
     }
 
-    this.saveCart(cart);
+    await this.saveCart(cart);
   }
 
-  removeFromCart(index: number): void {
+  async removeFromCart(index: number): Promise<void> {
     if (!this.isBrowser) {
       return;
     }
     const cart = this.getCartItems();
     cart.splice(index, 1);
-    this.saveCart(cart);
+    await this.saveCart(cart);
   }
 
-  updateQuantity(index: number, quantity: number): void {
+  async updateQuantity(index: number, quantity: number): Promise<void> {
     if (!this.isBrowser) {
       return;
     }
     const cart = this.getCartItems();
     if (cart[index] && quantity > 0) {
       cart[index].quantity = quantity;
-      this.saveCart(cart);
+      await this.saveCart(cart);
     }
   }
 
-  clearCart(): void {
+  async clearCart(): Promise<void> {
     if (!this.isBrowser) {
       return;
     }
+
+    // Clear localStorage
     localStorage.removeItem(this.CART_STORAGE_KEY);
+
+    // Clear Firestore if using production mode and user is authenticated
+    if (!this.useMockData && this.authService.getCurrentUser()) {
+      const user = this.authService.getCurrentUser();
+      if (user) {
+        const cartRef = doc(this.firestore, `carts/${user.uid}`);
+        await setDoc(cartRef, {
+          items: [],
+          updatedAt: Timestamp.now()
+        });
+      }
+    }
   }
 
   getCartCount(): number {
@@ -84,13 +121,110 @@ export class CartService {
 
   getCartTotal(): number {
     const cart = this.getCartItems();
-    return cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+    return cart.reduce((total, item) => {
+      const price = item.selectedVariant?.price ?? item.product.price;
+      return total + (price * item.quantity);
+    }, 0);
   }
 
-  private saveCart(cart: CartItem[]): void {
+  private async saveCart(cart: CartItem[]): Promise<void> {
     if (!this.isBrowser) {
       return;
     }
+
+    // Always save to localStorage first for immediate access
     localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(cart));
+
+    // If in production mode and user is authenticated, sync to Firestore
+    if (!this.useMockData && this.authService.getCurrentUser() && !this.cartSyncInProgress) {
+      await this.syncCartToFirestore(cart);
+    }
+  }
+
+  private async syncCartToFirestore(cart: CartItem[]): Promise<void> {
+    const user = this.authService.getCurrentUser();
+    if (!user) return;
+
+    try {
+      const cartRef = doc(this.firestore, `carts/${user.uid}`);
+      await setDoc(cartRef, {
+        items: cart,
+        updatedAt: Timestamp.now()
+      });
+    } catch (error) {
+      console.error('Error syncing cart to Firestore:', error);
+      // Cart is still saved in localStorage, so user can continue shopping
+    }
+  }
+
+  private async loadCartFromFirestore(): Promise<CartItem[]> {
+    const user = this.authService.getCurrentUser();
+    if (!user) return [];
+
+    try {
+      const cartRef = doc(this.firestore, `carts/${user.uid}`);
+      const cartDoc = await getDoc(cartRef);
+
+      if (cartDoc.exists()) {
+        const data = cartDoc.data() as FirestoreCart;
+        return data.items || [];
+      }
+    } catch (error) {
+      console.error('Error loading cart from Firestore:', error);
+    }
+
+    return [];
+  }
+
+  private async handleUserSignIn(): Promise<void> {
+    if (!this.isBrowser || this.useMockData || this.cartSyncInProgress) {
+      return;
+    }
+
+    this.cartSyncInProgress = true;
+
+    try {
+      // Get current localStorage cart
+      const localCart = this.getCartItems();
+
+      // Load cart from Firestore
+      const firestoreCart = await this.loadCartFromFirestore();
+
+      // Merge carts
+      const mergedCart = this.mergeCarts(localCart, firestoreCart);
+
+      // Save merged cart to localStorage
+      localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(mergedCart));
+
+      // Sync to Firestore
+      await this.syncCartToFirestore(mergedCart);
+    } catch (error) {
+      console.error('Error handling user sign-in for cart:', error);
+    } finally {
+      this.cartSyncInProgress = false;
+    }
+  }
+
+  private mergeCarts(localCart: CartItem[], firestoreCart: CartItem[]): CartItem[] {
+    const merged = [...firestoreCart];
+
+    // Add items from local cart that don't exist in Firestore cart
+    for (const localItem of localCart) {
+      const existingIndex = merged.findIndex(item =>
+        item.product.id === localItem.product.id &&
+        item.specialInstructions === localItem.specialInstructions &&
+        item.selectedVariant?.id === localItem.selectedVariant?.id
+      );
+
+      if (existingIndex !== -1) {
+        // Item exists in both carts - add quantities
+        merged[existingIndex].quantity += localItem.quantity;
+      } else {
+        // Item only exists in local cart - add it
+        merged.push(localItem);
+      }
+    }
+
+    return merged;
   }
 }

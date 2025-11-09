@@ -20,4 +20,22 @@ export class ProductCardComponent {
   closeModal(): void {
     this.selectedProduct = null;
   }
+
+  hasVariants(): boolean {
+    return !!(this.product.variants && this.product.variants.length > 0);
+  }
+
+  getMinPrice(): number {
+    if (!this.hasVariants()) {
+      return this.product.price;
+    }
+    return Math.min(...this.product.variants!.map(v => v.price));
+  }
+
+  getMaxPrice(): number {
+    if (!this.hasVariants()) {
+      return this.product.price;
+    }
+    return Math.max(...this.product.variants!.map(v => v.price));
+  }
 }

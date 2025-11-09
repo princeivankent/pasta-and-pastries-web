@@ -1,6 +1,7 @@
 // Development environment configuration
 export const environment = {
   production: false,
+  useMockData: false, // Use mock data in development to avoid Firestore read costs
   firebase: {
     apiKey: "AIzaSyCLhbGhKbV7b8dcXQX208832t1SKhWRe0A",
     authDomain: "pasta-and-pastries.firebaseapp.com",

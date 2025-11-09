@@ -51,7 +51,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Add LocalBusiness structured data
     this.seoService.addStructuredData(this.seoService.getLocalBusinessSchema());
 
-    this.bestSellers = this.productsService.getBestSellers();
+    // Subscribe to best sellers from ProductsService (now returns Observable)
+    this.productsService.getBestSellers().subscribe({
+      next: (products) => {
+        this.bestSellers = products;
+      },
+      error: (error) => {
+        console.error('Error loading best sellers:', error);
+        this.bestSellers = [];
+      }
+    });
+
     this.testimonials = this.testimonialsService.getAllTestimonials();
     // Temporarily disabled auto-rotation - can be re-enabled later
     // this.startAutoRotate();

@@ -1,6 +1,7 @@
 // Production environment configuration
 export const environment = {
   production: true,
+  useMockData: false, // Use Firestore in production
   firebase: {
     apiKey: "AIzaSyCLhbGhKbV7b8dcXQX208832t1SKhWRe0A",
     authDomain: "pasta-and-pastries.firebaseapp.com",

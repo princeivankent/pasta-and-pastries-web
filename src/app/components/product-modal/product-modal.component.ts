@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../models/product';
+import { Product, ProductVariant } from '../../models/product';
 import { CartService } from '../../services/cart.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -19,6 +19,7 @@ export class ProductModalComponent {
   specialInstructions: string = '';
   isAdding: boolean = false;
   justAdded: boolean = false;
+  selectedVariant: ProductVariant | null = null;
 
   constructor(
     private cartService: CartService,
@@ -31,16 +32,17 @@ export class ProductModalComponent {
   }
 
   addToCart(): void {
-    if (this.product && !this.isAdding) {
+    if (this.product && !this.isAdding && this.canAddToCart()) {
       this.isAdding = true;
-      this.cartService.addToCart(this.product, this.quantity, this.specialInstructions);
+      this.cartService.addToCart(this.product, this.quantity, this.specialInstructions, this.selectedVariant || undefined);
 
       // Show success state
       this.justAdded = true;
 
       // Show toast notification
       const quantityText = this.quantity > 1 ? `${this.quantity}x ` : '';
-      this.toastService.success(`${quantityText}${this.product.name} added to cart!`);
+      const variantText = this.selectedVariant ? ` (${this.selectedVariant.label})` : '';
+      this.toastService.success(`${quantityText}${this.product.name}${variantText} added to cart!`);
 
       // Close modal after brief delay to show success state
       setTimeout(() => {
@@ -64,5 +66,28 @@ export class ProductModalComponent {
   private resetForm(): void {
     this.quantity = 1;
     this.specialInstructions = '';
+    this.selectedVariant = null;
+  }
+
+  hasVariants(): boolean {
+    return !!(this.product?.variants && this.product.variants.length > 0);
+  }
+
+  selectVariant(variant: ProductVariant): void {
+    this.selectedVariant = variant;
+  }
+
+  getCurrentPrice(): number {
+    if (this.selectedVariant) {
+      return this.selectedVariant.price;
+    }
+    return this.product?.price || 0;
+  }
+
+  canAddToCart(): boolean {
+    if (!this.product) return false;
+    // If product has variants, a variant must be selected
+    if (this.hasVariants() && !this.selectedVariant) return false;
+    return true;
   }
 }

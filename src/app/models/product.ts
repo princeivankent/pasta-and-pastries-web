@@ -1,5 +1,13 @@
+export interface ProductVariant {
+  id: string;
+  label: string;
+  price: number;
+  servings?: string;
+  dimensions?: string;
+}
+
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   category: 'pasta' | 'pastry';
   description: string;
@@ -7,4 +15,5 @@ export interface Product {
   image: string;
   ingredients?: string[];
   isBestSeller?: boolean;
+  variants?: ProductVariant[];
 }
