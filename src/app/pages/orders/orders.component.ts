@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CheckoutService } from '../../services/checkout.service';
@@ -13,17 +13,17 @@ import { Order } from '../../models/order';
   styleUrl: './orders.component.scss'
 })
 export class OrdersComponent implements OnInit {
+  private checkoutService = inject(CheckoutService);
+  private authService = inject(AuthService);
+  private seoService = inject(SeoService);
+  private router = inject(Router);
+
   orders: Order[] = [];
   isLoading = true;
   errorMessage = '';
   currentUser$ = this.authService.user$;
 
-  constructor(
-    private checkoutService: CheckoutService,
-    private authService: AuthService,
-    private seoService: SeoService,
-    private router: Router
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
     // Set SEO meta tags for orders page
