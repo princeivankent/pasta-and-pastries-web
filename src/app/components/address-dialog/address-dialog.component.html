@@ -5,10 +5,10 @@
     <div class="flex items-start justify-between mb-4">
       <div>
         <h3 class="font-heading font-bold text-2xl text-base-content">
-          {{ isWelcomeDialog ? 'Welcome! 🎉' : 'Add Delivery Address' }}
+          {{ isWelcomeDialog ? 'Welcome! 🎉' : 'Delivery Address' }}
         </h3>
         <p class="text-sm text-base-content/70 mt-1">
-          {{ isWelcomeDialog ? 'Let\'s set up your delivery address to get started!' : 'Add a new delivery address for your orders' }}
+          {{ isWelcomeDialog ? 'Please provide your delivery address to continue' : 'Update your delivery address' }}
         </p>
       </div>
       <button
@@ -29,135 +29,37 @@
 
     <!-- Address Form -->
     <form (ngSubmit)="onSubmit()" class="space-y-4">
-      <!-- Street Address -->
+      <!-- Delivery Address -->
       <div class="form-control">
         <label class="label">
-          <span class="label-text font-semibold">Street Address <span class="text-error">*</span></span>
+          <span class="label-text font-semibold">Complete Delivery Address <span class="text-error">*</span></span>
         </label>
-        <input
-          type="text"
-          [(ngModel)]="formData.street"
-          name="street"
-          placeholder="e.g., 123 Main Street, Unit 4B"
-          class="input input-bordered w-full px-2 py-2"
+        <textarea
+          [(ngModel)]="formData.address"
+          name="address"
+          placeholder="e.g., 123 Main Street, Barangay San Antonio, Manila, Metro Manila, 1000, Philippines"
+          class="textarea textarea-bordered w-full h-24 px-3 py-2"
           required
-        />
-      </div>
-
-      <!-- Barangay (Optional) -->
-      <div class="form-control">
+        ></textarea>
         <label class="label">
-          <span class="label-text font-semibold">Barangay</span>
+          <span class="label-text-alt text-base-content/60">Enter your complete delivery address including street, barangay, city, province, and postal code</span>
         </label>
-        <input
-          type="text"
-          [(ngModel)]="formData.barangay"
-          name="barangay"
-          placeholder="e.g., Barangay San Antonio"
-          class="input input-bordered w-full px-2 py-2"
-        />
-      </div>
-
-      <!-- City and Province -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-semibold">City <span class="text-error">*</span></span>
-          </label>
-          <input
-            type="text"
-            [(ngModel)]="formData.city"
-            name="city"
-            placeholder="e.g., Manila"
-            class="input input-bordered w-full px-2 py-2"
-            required
-          />
-        </div>
-
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-semibold">Province <span class="text-error">*</span></span>
-          </label>
-          <input
-            type="text"
-            [(ngModel)]="formData.province"
-            name="province"
-            placeholder="e.g., Metro Manila"
-            class="input input-bordered w-full px-2 py-2"
-            required
-          />
-        </div>
-      </div>
-
-      <!-- Postal Code and Country -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-semibold">Postal Code</span>
-          </label>
-          <input
-            type="text"
-            [(ngModel)]="formData.postalCode"
-            name="postalCode"
-            placeholder="e.g., 1000"
-            class="input input-bordered w-full px-2 py-2"
-          />
-        </div>
-
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-semibold">Country</span>
-          </label>
-          <input
-            type="text"
-            [(ngModel)]="formData.country"
-            name="country"
-            class="input input-bordered w-full px-2 py-2"
-            readonly
-          />
-        </div>
       </div>
 
       <!-- Phone Number -->
       <div class="form-control">
         <label class="label">
-          <span class="label-text font-semibold">Phone Number</span>
+          <span class="label-text font-semibold">Contact Number</span>
         </label>
         <input
           type="tel"
           [(ngModel)]="formData.phoneNumber"
           name="phoneNumber"
           placeholder="e.g., +63 912 345 6789"
-          class="input input-bordered w-full px-2 py-2"
+          class="input input-bordered w-full px-3 py-2"
         />
-      </div>
-
-      <!-- Address Label -->
-      <div class="form-control">
         <label class="label">
-          <span class="label-text font-semibold">Label</span>
-        </label>
-        <select
-          [(ngModel)]="formData.label"
-          name="label"
-          class="select select-bordered w-full px-2 py-2"
-        >
-          <option value="Home">Home</option>
-          <option value="Work">Work</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-
-      <!-- Set as Default -->
-      <div class="form-control">
-        <label class="label cursor-pointer justify-start gap-3 py-3">
-          <input
-            type="checkbox"
-            [(ngModel)]="formData.isDefault"
-            name="isDefault"
-            class="checkbox checkbox-primary w-5 h-5"
-          />
-          <span class="label-text">Set as default delivery address</span>
+          <span class="label-text-alt text-base-content/60">Optional - for delivery coordination</span>
         </label>
       </div>
 

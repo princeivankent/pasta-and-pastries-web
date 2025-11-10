@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AddressService } from '../../services/address.service';
-import { Address } from '../../models/address';
+import { AddressService, UserAddress } from '../../services/address.service';
 
 @Component({
   selector: 'app-address-dialog',
@@ -10,29 +9,37 @@ import { Address } from '../../models/address';
   templateUrl: './address-dialog.component.html',
   styleUrl: './address-dialog.component.scss'
 })
-export class AddressDialogComponent {
+export class AddressDialogComponent implements OnInit {
   @Input() isOpen = false;
   @Input() isWelcomeDialog = false; // True for new user welcome, false for regular address management
   @Output() closeDialog = new EventEmitter<void>();
-  @Output() addressSaved = new EventEmitter<Address>();
+  @Output() addressSaved = new EventEmitter<UserAddress>();
 
   private addressService = inject(AddressService);
 
   // Form data
   formData = {
-    street: '',
-    barangay: '',
-    city: '',
-    province: '',
-    postalCode: '',
-    country: 'Philippines', // Default to Philippines
-    phoneNumber: '',
-    label: 'Home',
-    isDefault: true
+    address: '',
+    phoneNumber: ''
   };
 
   isSubmitting = false;
   errorMessage = '';
+
+  ngOnInit(): void {
+    // Load existing address if available
+    this.addressService.getUserAddress().subscribe({
+      next: (userAddress) => {
+        if (userAddress) {
+          this.formData.address = userAddress.address;
+          this.formData.phoneNumber = userAddress.phoneNumber || '';
+        }
+      },
+      error: (error) => {
+        console.log('No existing address found:', error);
+      }
+    });
+  }
 
   /**
    * Close the dialog
@@ -59,18 +66,18 @@ export class AddressDialogComponent {
    */
   onSubmit(): void {
     // Validate required fields
-    if (!this.formData.street || !this.formData.city || !this.formData.province) {
-      this.errorMessage = 'Please fill in all required fields (Street, City, Province)';
+    if (!this.formData.address.trim()) {
+      this.errorMessage = 'Please enter your delivery address';
       return;
     }
 
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    this.addressService.addAddress(this.formData).subscribe({
-      next: (address) => {
-        console.log('Address saved successfully:', address);
-        this.addressSaved.emit(address);
+    this.addressService.saveUserAddress(this.formData.address, this.formData.phoneNumber).subscribe({
+      next: (userAddress) => {
+        console.log('Address saved successfully:', userAddress);
+        this.addressSaved.emit(userAddress);
         this.closeDialog.emit();
         this.resetForm();
         this.isSubmitting = false;
@@ -88,15 +95,8 @@ export class AddressDialogComponent {
    */
   private resetForm(): void {
     this.formData = {
-      street: '',
-      barangay: '',
-      city: '',
-      province: '',
-      postalCode: '',
-      country: 'Philippines',
-      phoneNumber: '',
-      label: 'Home',
-      isDefault: true
+      address: '',
+      phoneNumber: ''
     };
     this.errorMessage = '';
   }
