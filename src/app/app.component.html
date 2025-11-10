@@ -1,10 +1,10 @@
-<app-navbar />
+<app-navbar *ngIf="!isAdminRoute" />
 
 <main class="min-h-screen">
   <router-outlet />
 </main>
 
-<app-footer />
+<app-footer *ngIf="!isAdminRoute" />
 
 <!-- Toast Notifications -->
 <app-toast />

@@ -11,6 +11,6 @@ export interface Order {
   orderType: 'pickup' | 'delivery';
   specialInstructions?: string;
   orderDate: Date;
-  status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled';
+  status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'delivering' | 'completed' | 'cancelled';
   userId?: string; // Firebase Auth user ID (required in production)
 }
