@@ -1,6 +1,7 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Auth, signInWithPopup, signOut, GoogleAuthProvider, User, user, setPersistence, browserLocalPersistence } from '@angular/fire/auth';
+import { Auth, signInWithPopup, signOut, GoogleAuthProvider, User, user, setPersistence } from '@angular/fire/auth';
+import { browserLocalPersistence } from 'firebase/auth';
 import { Observable } from 'rxjs';
 
 @Injectable({
