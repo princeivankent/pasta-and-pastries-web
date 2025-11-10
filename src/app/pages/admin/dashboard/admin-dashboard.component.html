@@ -20,7 +20,10 @@
           <button
             *ngFor="let option of statusOptions"
             (click)="onStatusFilterChange(option.value)"
-            [class]="'btn btn-sm px-4 ' + (selectedStatus === option.value ? 'btn-primary' : 'btn-ghost')"
+            class="btn btn-sm px-4"
+            [class.bg-sky-500]="selectedStatus === option.value"
+            [class.text-white]="selectedStatus === option.value"
+            [class.bg-ghost]="selectedStatus !== option.value"
           >
             {{ option.label }}
           </button>
@@ -51,7 +54,13 @@
               <h3 class="text-lg font-bold">{{ order.id }}</h3>
               <p class="text-sm text-base-content/70">{{ formatDate(order.orderDate) }}</p>
             </div>
-            <div class="badge badge-lg" [class]="getStatusBadgeClass(order.status)">
+            <div class="badge badge-lg"
+                 [class.badge-warning]="order.status === 'pending'"
+                 [class.badge-info]="order.status === 'confirmed'"
+                 [class.badge-primary]="order.status === 'preparing'"
+                 [class.badge-success]="order.status === 'ready'"
+                 [class.badge-neutral]="order.status === 'completed'"
+                 [class.badge-error]="order.status === 'cancelled'">
               {{ order.status | uppercase }}
             </div>
           </div>
@@ -123,14 +132,14 @@
             <button
               *ngIf="canAdvanceStatus(order.status)"
               (click)="advanceOrderStatus(order)"
-              class="btn btn-primary btn-sm px-4"
+              class="btn bg-indigo-500 text-white btn-sm px-4"
             >
               Mark as {{ getNextStatus(order.status) }}
             </button>
             <button
               *ngIf="order.status !== 'cancelled' && order.status !== 'completed'"
               (click)="cancelOrder(order.id)"
-              class="btn btn-error btn-sm px-4"
+              class="btn btn-sm px-4"
             >
               Cancel Order
             </button>

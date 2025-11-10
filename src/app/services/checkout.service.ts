@@ -6,7 +6,6 @@ import { Observable, from, of, throwError } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { CartService } from './cart.service';
 import { Order } from '../models/order';
-import { CartItem } from '../models/cart-item';
 import { environment } from '../../environments/environment';
 
 @Injectable({

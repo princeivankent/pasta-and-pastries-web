@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Firestore, collection, collectionData, doc, docData, query, where } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -10,6 +11,8 @@ import { environment } from '../../environments/environment';
 })
 export class ProductsService {
   private firestore = inject(Firestore);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
 
   // Mock data for development (to avoid Firestore read costs)
   private mockProducts: Product[] = [
@@ -84,7 +87,8 @@ export class ProductsService {
    * Get all products - returns Observable for Firestore, synchronous for mock data
    */
   getAllProducts(): Observable<Product[]> {
-    if (environment.useMockData) {
+    // Use mock data during SSR or when explicitly configured
+    if (!this.isBrowser || environment.useMockData) {
       return of(this.mockProducts);
     }
 
@@ -103,7 +107,8 @@ export class ProductsService {
    * Get best seller products
    */
   getBestSellers(): Observable<Product[]> {
-    if (environment.useMockData) {
+    // Use mock data during SSR or when explicitly configured
+    if (!this.isBrowser || environment.useMockData) {
       return of(this.mockProducts.filter(p => p.isBestSeller));
     }
 
@@ -123,7 +128,8 @@ export class ProductsService {
    * Get products by category
    */
   getProductsByCategory(category: 'pasta' | 'pastry'): Observable<Product[]> {
-    if (environment.useMockData) {
+    // Use mock data during SSR or when explicitly configured
+    if (!this.isBrowser || environment.useMockData) {
       return of(this.mockProducts.filter(p => p.category === category));
     }
 
@@ -143,7 +149,8 @@ export class ProductsService {
    * Get product by ID
    */
   getProductById(id: string): Observable<Product | undefined> {
-    if (environment.useMockData) {
+    // Use mock data during SSR or when explicitly configured
+    if (!this.isBrowser || environment.useMockData) {
       return of(this.mockProducts.find(p => p.id === id));
     }
 
