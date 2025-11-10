@@ -87,13 +87,13 @@
           </div>
 
           <!-- Customer Info - Compact -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm mb-2">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
             <div>
               <span class="font-semibold text-base-content/70">Customer: </span>
               <span *ngIf="order.customerName">{{ order.customerName }}</span>
               <span *ngIf="order.customerPhone" class="text-base-content/60"> • {{ order.customerPhone }}</span>
               <span *ngIf="!order.customerName && !order.customerPhone" class="text-base-content/50">No info</span>
-            </div>
+            </div><br>
             <div *ngIf="order.orderType === 'delivery' && order.deliveryAddress">
               <span class="font-semibold text-base-content/70">Address: </span>
               <span class="text-base-content/80">{{ order.deliveryAddress }}</span>
@@ -101,7 +101,7 @@
           </div>
 
           <!-- Special Instructions - Compact -->
-          <div *ngIf="order.specialInstructions" class="text-sm mb-3 bg-warning/10 rounded p-2">
+          <div *ngIf="order.specialInstructions" class="text-sm mb-3 bg-amber-50 rounded p-2">
             <span class="font-semibold text-base-content/70">Note: </span>
             <span class="italic">{{ order.specialInstructions }}</span>
           </div>
@@ -113,7 +113,7 @@
               <button
                 *ngIf="canAdvanceStatus(order.status)"
                 (click)="advanceOrderStatus(order)"
-                class="btn bg-indigo-500 text-white btn-sm"
+                class="btn bg-indigo-500 text-white btn-sm px-2"
               >
                 Mark as {{ getNextStatus(order.status) }}
               </button>
