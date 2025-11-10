@@ -2,7 +2,7 @@ import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Firestore, collection, collectionData, doc, docData, query, where } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, take } from 'rxjs/operators';
 import { Product } from '../models/product';
 import { environment } from '../../environments/environment';
 
@@ -94,6 +94,7 @@ export class ProductsService {
 
     const productsCollection = collection(this.firestore, 'products');
     return collectionData(productsCollection, { idField: 'id' }).pipe(
+      take(1), // Complete after first emission to prevent continuous listening
       map(products => products as Product[]),
       catchError(error => {
         console.error('Error fetching products from Firestore:', error);
@@ -116,6 +117,7 @@ export class ProductsService {
     const bestSellersQuery = query(productsCollection, where('isBestSeller', '==', true));
 
     return collectionData(bestSellersQuery, { idField: 'id' }).pipe(
+      take(1), // Complete after first emission to prevent continuous listening
       map(products => products as Product[]),
       catchError(error => {
         console.error('Error fetching best sellers from Firestore:', error);
@@ -137,6 +139,7 @@ export class ProductsService {
     const categoryQuery = query(productsCollection, where('category', '==', category));
 
     return collectionData(categoryQuery, { idField: 'id' }).pipe(
+      take(1), // Complete after first emission to prevent continuous listening
       map(products => products as Product[]),
       catchError(error => {
         console.error(`Error fetching ${category} products from Firestore:`, error);
@@ -156,6 +159,7 @@ export class ProductsService {
 
     const productDoc = doc(this.firestore, `products/${id}`);
     return docData(productDoc, { idField: 'id' }).pipe(
+      take(1), // Complete after first emission to prevent continuous listening
       map(product => product as Product),
       catchError(error => {
         console.error(`Error fetching product ${id} from Firestore:`, error);
