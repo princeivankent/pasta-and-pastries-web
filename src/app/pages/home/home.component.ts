@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductsService } from '../../services/products.service';
 import { TestimonialsService } from '../../services/testimonials.service';
@@ -10,7 +10,7 @@ import { Testimonial } from '../../models/testimonial';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink, ProductCardComponent],
+  imports: [CommonModule, ProductCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

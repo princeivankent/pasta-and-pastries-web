@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-about',
-  imports: [RouterLink],
   templateUrl: './about.component.html',
   styleUrl: './about.component.scss'
 })
 export class AboutComponent implements OnInit {
-  constructor(private seoService: SeoService) {}
+  constructor(
+    private seoService: SeoService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     // Set SEO meta tags for about page
@@ -20,6 +22,20 @@ export class AboutComponent implements OnInit {
       image: '/images/lasagna.jpg',
       url: 'https://pastaandpastriesbycha.com/about',
       type: 'website'
+    });
+  }
+
+  // Navigate to menu with smooth scroll to top
+  navigateToMenu(): void {
+    this.router.navigate(['/menu']).then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Navigate to contact with smooth scroll to top
+  navigateToContact(): void {
+    this.router.navigate(['/contact']).then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 }
