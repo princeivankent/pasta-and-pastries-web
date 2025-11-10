@@ -28,6 +28,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     { value: 'confirmed', label: 'Confirmed' },
     { value: 'preparing', label: 'Preparing' },
     { value: 'ready', label: 'Ready' },
+    { value: 'delivering', label: 'Delivering' },
     { value: 'completed', label: 'Completed' },
     { value: 'cancelled', label: 'Cancelled' }
   ];
@@ -101,7 +102,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       'pending': 'confirmed',
       'confirmed': 'preparing',
       'preparing': 'ready',
-      'ready': 'completed',
+      'ready': 'delivering',
+      'delivering': 'completed',
       'completed': null,
       'cancelled': null
     };
@@ -131,6 +133,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       'confirmed': 'badge-info',
       'preparing': 'badge-primary',
       'ready': 'badge-success',
+      'delivering': 'badge-accent',
       'completed': 'badge-neutral',
       'cancelled': 'badge-error'
     };

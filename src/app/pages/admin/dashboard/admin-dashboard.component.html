@@ -45,104 +45,86 @@
     </div>
 
     <!-- Orders List -->
-    <div *ngIf="!isLoading && filteredOrders.length > 0" class="space-y-4">
+    <div *ngIf="!isLoading && filteredOrders.length > 0" class="space-y-3">
       <div *ngFor="let order of filteredOrders" class="card bg-base-100 shadow-md">
-        <div class="card-body">
-          <!-- Order Header -->
-          <div class="flex justify-between items-start mb-4">
-            <div>
-              <h3 class="text-lg font-bold">{{ order.id }}</h3>
-              <p class="text-sm text-base-content/70">{{ formatDate(order.orderDate) }}</p>
+        <div class="card-body p-4">
+          <!-- Order Header - Compact -->
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-3">
+              <div class="badge badge-lg"
+                   [class.badge-warning]="order.status === 'pending'"
+                   [class.badge-info]="order.status === 'confirmed'"
+                   [class.badge-primary]="order.status === 'preparing'"
+                   [class.badge-success]="order.status === 'ready'"
+                   [class.badge-accent]="order.status === 'delivering'"
+                   [class.badge-neutral]="order.status === 'completed'"
+                   [class.badge-error]="order.status === 'cancelled'">
+                {{ order.status | uppercase }}
+              </div>
+              <div class="badge badge-outline">{{ order.orderType | uppercase }}</div>
             </div>
-            <div class="badge badge-lg"
-                 [class.badge-warning]="order.status === 'pending'"
-                 [class.badge-info]="order.status === 'confirmed'"
-                 [class.badge-primary]="order.status === 'preparing'"
-                 [class.badge-success]="order.status === 'ready'"
-                 [class.badge-neutral]="order.status === 'completed'"
-                 [class.badge-error]="order.status === 'cancelled'">
-              {{ order.status | uppercase }}
-            </div>
+            <span class="text-xs text-base-content/70">{{ formatDate(order.orderDate) }}</span>
           </div>
 
-          <!-- Customer Info -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <p class="text-sm font-semibold text-base-content/70">Customer Info</p>
-              <p *ngIf="order.customerName">{{ order.customerName }}</p>
-              <p *ngIf="order.customerEmail" class="text-sm">{{ order.customerEmail }}</p>
-              <p *ngIf="order.customerPhone" class="text-sm">{{ order.customerPhone }}</p>
-              <p *ngIf="!order.customerName && !order.customerEmail && !order.customerPhone" class="text-sm text-base-content/50">No customer info</p>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-base-content/70">Order Type</p>
-              <p class="badge badge-outline">{{ order.orderType | uppercase }}</p>
-
-              <!-- Delivery Address -->
-              <div *ngIf="order.orderType === 'delivery' && order.deliveryAddress" class="mt-2">
-                <p class="text-sm font-semibold text-base-content/70">Delivery Address</p>
-                <p class="text-sm">{{ order.deliveryAddress }}</p>
+          <!-- Order Items - Prominent -->
+          <div class="mb-3 bg-base-200 rounded-lg p-3">
+            <div class="space-y-1">
+              <div *ngFor="let item of order.items" class="flex justify-between items-center text-sm">
+                <div class="flex-1">
+                  <span class="font-medium">{{ item.quantity }}x {{ item.product.name }}</span>
+                  <span *ngIf="item.selectedVariant" class="text-xs text-base-content/60 ml-1">
+                    ({{ item.selectedVariant.label }})
+                  </span>
+                </div>
+                <span class="font-semibold text-base-content/80 ml-2">₱{{ (getItemPrice(item) * item.quantity).toFixed(2) }}</span>
               </div>
             </div>
-          </div>
-
-          <!-- Order Items -->
-          <div class="mb-4">
-            <p class="text-sm font-semibold text-base-content/70 mb-2">Order Items</p>
-            <div class="overflow-x-auto">
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of order.items">
-                    <td>
-                      {{ item.product.name }}
-                      <span *ngIf="item.selectedVariant" class="text-xs text-base-content/70">
-                        ({{ item.selectedVariant.label }})
-                      </span>
-                    </td>
-                    <td>{{ item.quantity }}</td>
-                    <td>₱{{ getItemPrice(item).toFixed(2) }}</td>
-                    <td>₱{{ (getItemPrice(item) * item.quantity).toFixed(2) }}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="divider my-2"></div>
+            <div class="flex justify-between items-center">
+              <span class="font-bold">Total</span>
+              <span class="font-bold text-lg">₱{{ getTotalAmount(order).toFixed(2) }}</span>
             </div>
           </div>
 
-          <!-- Special Instructions -->
-          <div *ngIf="order.specialInstructions" class="mb-4">
-            <p class="text-sm font-semibold text-base-content/70">Special Instructions</p>
-            <p class="text-sm">{{ order.specialInstructions }}</p>
+          <!-- Customer Info - Compact -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm mb-2">
+            <div>
+              <span class="font-semibold text-base-content/70">Customer: </span>
+              <span *ngIf="order.customerName">{{ order.customerName }}</span>
+              <span *ngIf="order.customerPhone" class="text-base-content/60"> • {{ order.customerPhone }}</span>
+              <span *ngIf="!order.customerName && !order.customerPhone" class="text-base-content/50">No info</span>
+            </div>
+            <div *ngIf="order.orderType === 'delivery' && order.deliveryAddress">
+              <span class="font-semibold text-base-content/70">Address: </span>
+              <span class="text-base-content/80">{{ order.deliveryAddress }}</span>
+            </div>
           </div>
 
-          <!-- Total Amount -->
-          <div class="mb-4">
-            <p class="text-lg font-bold">Total: ₱{{ getTotalAmount(order).toFixed(2) }}</p>
+          <!-- Special Instructions - Compact -->
+          <div *ngIf="order.specialInstructions" class="text-sm mb-3 bg-warning/10 rounded p-2">
+            <span class="font-semibold text-base-content/70">Note: </span>
+            <span class="italic">{{ order.specialInstructions }}</span>
           </div>
 
-          <!-- Action Buttons -->
-          <div class="card-actions justify-end gap-2">
-            <button
-              *ngIf="canAdvanceStatus(order.status)"
-              (click)="advanceOrderStatus(order)"
-              class="btn bg-indigo-500 text-white btn-sm px-4"
-            >
-              Mark as {{ getNextStatus(order.status) }}
-            </button>
-            <button
-              *ngIf="order.status !== 'cancelled' && order.status !== 'completed'"
-              (click)="cancelOrder(order.id)"
-              class="btn btn-sm px-4"
-            >
-              Cancel Order
-            </button>
+          <!-- Action Buttons - Compact -->
+          <div class="flex justify-between items-center gap-2 mt-2">
+            <span class="text-xs text-base-content/60">Order #{{ order.id.substring(0, 8) }}</span>
+            <div class="flex gap-2">
+              <button
+                *ngIf="canAdvanceStatus(order.status)"
+                (click)="advanceOrderStatus(order)"
+                class="btn bg-indigo-500 text-white btn-sm"
+              >
+                Mark as {{ getNextStatus(order.status) }}
+              </button>
+              <button
+                *ngIf="order.status !== 'cancelled' && order.status !== 'completed'"
+                (click)="cancelOrder(order.id)"
+                class="btn btn-sm btn-outline btn-error"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </div>
