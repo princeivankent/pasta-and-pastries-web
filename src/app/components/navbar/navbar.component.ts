@@ -144,12 +144,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Get user's default address and create order
-    this.addressService.getDefaultAddress().subscribe({
-      next: (defaultAddress) => {
-        // Check if user has a default address
-        if (!defaultAddress) {
-          // No default address - prompt user to add one
+    // Get user's delivery address and create order
+    this.addressService.getUserAddress().subscribe({
+      next: (userAddress) => {
+        // Check if user has a delivery address
+        if (!userAddress || !userAddress.address) {
+          // No delivery address - prompt user to add one
           this.toastService.warning('Please add a delivery address to proceed with your order.', 4000);
           this.closeCart();
           this.isAddressDialogOpen = true;
@@ -160,21 +160,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
         // Prepare customer info with address
         const customerInfo: any = {
           name: this.currentUser?.displayName || undefined,
-          email: this.currentUser?.email || undefined
+          email: this.currentUser?.email || undefined,
+          deliveryAddress: userAddress.address,
+          phone: userAddress.phoneNumber
         };
-
-        // Build full address string
-        const fullAddress = [
-          defaultAddress.street,
-          defaultAddress.barangay,
-          defaultAddress.city,
-          defaultAddress.province,
-          defaultAddress.postalCode,
-          defaultAddress.country
-        ].filter(Boolean).join(', ');
-
-        customerInfo.deliveryAddress = fullAddress;
-        customerInfo.phone = defaultAddress.phoneNumber;
 
         // Default order type is 'delivery'
         const orderType = 'delivery';
@@ -216,27 +205,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   async signIn(): Promise<void> {
     try {
-      const user = await this.authService.signInWithGoogle();
+      await this.authService.signInWithGoogle();
       this.closeUserMenu();
-
-      // Check if user has any addresses, if not show welcome dialog
-      if (user) {
-        this.addressService.getUserAddresses().subscribe({
-          next: (addresses) => {
-            if (addresses.length === 0) {
-              // New user, show welcome address dialog
-              this.showWelcomeAddressDialog = true;
-              this.isAddressDialogOpen = true;
-            }
-          },
-          error: (error) => {
-            console.log('Could not check user addresses:', error);
-            // Show welcome dialog anyway for new users
-            this.showWelcomeAddressDialog = true;
-            this.isAddressDialogOpen = true;
-          }
-        });
-      }
     } catch (error) {
       console.error('Failed to sign in:', error);
     }
