@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductsService } from '../../services/products.service';
 import { TestimonialsService } from '../../services/testimonials.service';
@@ -34,7 +34,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private productsService: ProductsService,
     private testimonialsService: TestimonialsService,
-    private seoService: SeoService
+    private seoService: SeoService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -236,5 +237,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     const baseOffset = this.currentSlide * 100;
     const dragPercentage = this.isDragging ? (this.dragOffset / window.innerWidth) * 100 : 0;
     return `translateX(-${baseOffset - dragPercentage}%)`;
+  }
+
+  // Navigate to menu with smooth scroll to top
+  navigateToMenu(): void {
+    this.router.navigate(['/menu']).then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 }
