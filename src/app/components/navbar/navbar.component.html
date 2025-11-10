@@ -338,3 +338,68 @@
   (closeDialog)="closeAddressDialog()"
   (addressSaved)="onAddressSaved()"
 ></app-address-dialog>
+
+<!-- Clear Cart Confirmation Modal -->
+<div *ngIf="isClearCartModalOpen" class="modal modal-open">
+  <div class="modal-box">
+    <h3 class="font-heading font-bold text-xl text-base-content mb-4">Clear Cart?</h3>
+    <p class="text-base-content/70 mb-6">
+      Are you sure you want to clear all items from your cart? This action cannot be undone.
+    </p>
+    <div class="modal-action">
+      <button
+        type="button"
+        (click)="closeClearCartModal()"
+        class="btn btn-ghost"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        (click)="confirmClearCart()"
+        class="btn btn-error"
+      >
+        Clear Cart
+      </button>
+    </div>
+  </div>
+  <div class="modal-backdrop bg-black/50" (click)="closeClearCartModal()"></div>
+</div>
+
+<!-- Checkout Confirmation Modal -->
+<div *ngIf="isCheckoutModalOpen" class="modal modal-open">
+  <div class="modal-box">
+    <h3 class="font-heading font-bold text-xl text-base-content mb-4">Confirm Checkout</h3>
+    <div class="space-y-3 mb-6">
+      <p class="text-base-content/70">
+        You are about to place an order with <span class="font-semibold">{{ cartCount }}</span> item(s).
+      </p>
+      <div class="bg-base-200 rounded-lg p-4">
+        <div class="flex justify-between items-center">
+          <span class="font-semibold text-base-content">Total Amount:</span>
+          <span class="text-olive-green font-bold text-xl">₱{{ cartTotal }}</span>
+        </div>
+      </div>
+      <p class="text-sm text-base-content/60">
+        Your order will be delivered to your saved address.
+      </p>
+    </div>
+    <div class="modal-action">
+      <button
+        type="button"
+        (click)="closeCheckoutModal()"
+        class="btn btn-ghost"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        (click)="confirmCheckout()"
+        class="btn bg-olive-green text-white hover:bg-olive-green/90 border-none"
+      >
+        Confirm & Place Order
+      </button>
+    </div>
+  </div>
+  <div class="modal-backdrop bg-black/50" (click)="closeCheckoutModal()"></div>
+</div>
