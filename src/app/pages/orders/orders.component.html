@@ -1,21 +1,29 @@
-<div class="min-h-screen bg-base-200 py-8 px-4">
-  <div class="container mx-auto max-w-6xl">
-    <!-- Page Header -->
-    <div class="mb-8">
-      <h1 class="text-4xl font-bold text-base-content mb-2">My Orders</h1>
-      <p class="text-base-content/70">Track your orders and view order history</p>
+<!-- Page Header Section -->
+<div class="bg-light-beige py-20">
+  <div class="container mx-auto px-4">
+    <div class="text-center max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 text-neutral">My Orders</h1>
+      <p class="text-xl md:text-2xl text-base-content/70 font-body leading-relaxed">
+        Track your orders and view order history
+      </p>
     </div>
+  </div>
+</div>
+
+<!-- Orders Content Section -->
+<div class="bg-base-100 py-20">
+  <div class="container mx-auto px-4 max-w-6xl">
 
     <!-- Not Signed In State -->
-    <div *ngIf="!(currentUser$ | async)" class="card bg-base-100 shadow-xl">
-      <div class="card-body text-center py-12">
+    <div *ngIf="!(currentUser$ | async)" class="card bg-base-200 shadow-xl">
+      <div class="card-body text-center py-16 px-8">
         <div class="mb-4">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
-        <h2 class="card-title justify-center text-2xl mb-2">Sign In Required</h2>
-        <p class="text-base-content/70 mb-6">Please sign in to view your order history</p>
+        <h2 class="text-3xl font-heading font-bold mb-3 text-neutral">Sign In Required</h2>
+        <p class="text-lg text-base-content/70 font-body mb-8">Please sign in to view your order history</p>
         <div>
           <button
             (click)="signInWithGoogle()"
@@ -48,30 +56,30 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="(currentUser$ | async) && !isLoading && !errorMessage && orders.length === 0" class="card bg-base-100 shadow-xl">
-      <div class="card-body text-center py-12">
+    <div *ngIf="(currentUser$ | async) && !isLoading && !errorMessage && orders.length === 0" class="card bg-base-200 shadow-xl">
+      <div class="card-body text-center py-16 px-8">
         <div class="mb-4">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
         </div>
-        <h2 class="card-title justify-center text-2xl mb-2">No Orders Yet</h2>
-        <p class="text-base-content/70 mb-6">You haven't placed any orders yet. Start exploring our menu!</p>
+        <h2 class="text-3xl font-heading font-bold mb-3 text-neutral">No Orders Yet</h2>
+        <p class="text-lg text-base-content/70 font-body mb-8">You haven't placed any orders yet. Start exploring our menu!</p>
         <div>
-          <a routerLink="/menu" class="btn bg-olive-green text-white hover:bg-olive-green/90 border-none">Browse Menu</a>
+          <a routerLink="/menu" class="btn bg-olive-green text-white hover:bg-olive-green/90 border-none btn-lg px-8 py-4 rounded-xl shadow-lg">Browse Menu</a>
         </div>
       </div>
     </div>
 
     <!-- Orders List -->
-    <div *ngIf="(currentUser$ | async) && !isLoading && !errorMessage && orders.length > 0" class="space-y-4">
-      <div *ngFor="let order of orders" class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-        <div class="card-body">
+    <div *ngIf="(currentUser$ | async) && !isLoading && !errorMessage && orders.length > 0" class="space-y-6">
+      <div *ngFor="let order of orders" class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
+        <div class="card-body p-8">
           <!-- Order Header -->
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 pb-4 border-b border-base-300">
             <div>
               <div class="flex items-center gap-2 mb-1">
-                <h2 class="card-title text-lg">Order #{{ order.id }}</h2>
+                <h2 class="text-xl font-heading font-bold text-neutral">Order #{{ order.id }}</h2>
                 <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
                   {{ getStatusLabel(order.status) }}
                 </span>

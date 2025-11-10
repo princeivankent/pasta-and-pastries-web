@@ -11,6 +11,7 @@ import { ProductModalComponent } from '../product-modal/product-modal.component'
 })
 export class ProductCardComponent {
   @Input() product!: Product;
+  @Input() showBestSellerBadge: boolean = false;
   selectedProduct: Product | null = null;
 
   openModal(): void {

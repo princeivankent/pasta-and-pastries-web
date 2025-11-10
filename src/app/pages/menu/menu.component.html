@@ -1,41 +1,72 @@
-<div class="container mx-auto px-4 py-12">
-  <!-- Page Header -->
-  <div class="text-center mb-12">
-    <h1 class="text-5xl font-heading font-bold mb-4 text-neutral">Our Menu</h1>
-    <p class="text-xl text-base-content/70 font-body">Discover our selection of homemade pasta and freshly baked pastries</p>
-  </div>
-
-  <!-- Category Filter -->
-  <div class="flex justify-center mb-8">
-    <div class="tabs tabs-boxed">
-      <a
-        class="tab"
-        [class.tab-active]="selectedCategory === 'all'"
-        (click)="filterByCategory('all')">
-        All Items
-      </a>
-      <a
-        class="tab"
-        [class.tab-active]="selectedCategory === 'pasta'"
-        (click)="filterByCategory('pasta')">
-        Pasta
-      </a>
-      <a
-        class="tab"
-        [class.tab-active]="selectedCategory === 'pastry'"
-        (click)="filterByCategory('pastry')">
-        Pastries
-      </a>
+<!-- Page Header Section -->
+<div class="bg-light-beige py-20">
+  <div class="container mx-auto px-4">
+    <div class="text-center max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 text-neutral">Our Menu</h1>
+      <p class="text-xl md:text-2xl text-base-content/70 font-body leading-relaxed">
+        Discover our selection of homemade pasta and freshly baked pastries
+      </p>
     </div>
   </div>
+</div>
 
-  <!-- Products Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    <app-product-card *ngFor="let product of filteredProducts" [product]="product" />
-  </div>
+<!-- Menu Content Section -->
+<div class="bg-base-100 py-20">
+  <div class="container mx-auto px-4">
+    <!-- Category Filter -->
+    <div class="flex justify-center mb-12">
+      <div class="tabs tabs-boxed bg-base-200 p-2 gap-2">
+        <a
+          class="tab tab-lg font-body"
+          [class.bg-olive-green]="selectedCategory === 'all'"
+          [class.text-white]="selectedCategory === 'all'"
+          [class.font-bold]="selectedCategory === 'all'"
+          (click)="filterByCategory('all')">
+          All Items
+        </a>
+        <a
+          class="tab tab-lg font-body"
+          [class.bg-olive-green]="selectedCategory === 'pasta'"
+          [class.text-white]="selectedCategory === 'pasta'"
+          [class.font-bold]="selectedCategory === 'pasta'"
+          (click)="filterByCategory('pasta')">
+          Pasta
+        </a>
+        <a
+          class="tab tab-lg font-body"
+          [class.bg-olive-green]="selectedCategory === 'pastry'"
+          [class.text-white]="selectedCategory === 'pastry'"
+          [class.font-bold]="selectedCategory === 'pastry'"
+          (click)="filterByCategory('pastry')">
+          Pastries
+        </a>
+      </div>
+    </div>
 
-  <!-- Empty State -->
-  <div *ngIf="filteredProducts.length === 0" class="text-center py-12">
-    <p class="text-xl text-base-content/70">No products found in this category.</p>
+    <!-- Products Count -->
+    <div class="text-center mb-8" *ngIf="filteredProducts.length > 0">
+      <p class="text-lg text-base-content/70 font-body">
+        Showing {{ filteredProducts.length }} {{ selectedCategory === 'all' ? 'items' : selectedCategory === 'pasta' ? 'pasta dishes' : 'pastries' }}
+      </p>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <app-product-card *ngFor="let product of filteredProducts" [product]="product" />
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredProducts.length === 0" class="text-center py-20">
+      <div class="mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h3 class="text-2xl font-heading font-bold mb-2 text-neutral">No Products Found</h3>
+      <p class="text-xl text-base-content/70 font-body">No products found in this category.</p>
+      <button (click)="filterByCategory('all')" class="btn bg-olive-green hover:bg-olive-green/90 text-white border-none mt-6">
+        View All Items
+      </button>
+    </div>
   </div>
 </div>

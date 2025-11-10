@@ -7,6 +7,7 @@ import { TestimonialsService } from '../../services/testimonials.service';
 import { SeoService } from '../../services/seo.service';
 import { Product } from '../../models/product';
 import { Testimonial } from '../../models/testimonial';
+import { timeout, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isAutoRotating: boolean = true;
   selectedImageUrl: string = '';
   selectedImageName: string = '';
+  isLoadingProducts: boolean = true;
 
   // Swipe/Drag functionality
   isDragging: boolean = false;
@@ -52,20 +54,32 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Add LocalBusiness structured data
     this.seoService.addStructuredData(this.seoService.getLocalBusinessSchema());
 
-    // Subscribe to best sellers from ProductsService (now returns Observable)
-    this.productsService.getBestSellers().subscribe({
-      next: (products) => {
-        this.bestSellers = products;
-      },
-      error: (error) => {
-        console.error('Error loading best sellers:', error);
-        this.bestSellers = [];
-      }
-    });
-
+    // Load testimonials (synchronous, no Firestore dependency)
     this.testimonials = this.testimonialsService.getAllTestimonials();
-    // Temporarily disabled auto-rotation - can be re-enabled later
-    // this.startAutoRotate();
+
+    // Subscribe to best sellers with timeout to prevent infinite loading
+    this.productsService.getBestSellers()
+      .pipe(
+        timeout(10000), // 10 second timeout
+        catchError((error) => {
+          console.error('Error loading best sellers:', error);
+          return of([]); // Return empty array on error
+        })
+      )
+      .subscribe({
+        next: (products) => {
+          this.bestSellers = products;
+          this.isLoadingProducts = false;
+        },
+        error: (error) => {
+          console.error('Error loading best sellers:', error);
+          this.bestSellers = [];
+          this.isLoadingProducts = false;
+        }
+      });
+
+    // Re-enabled auto-rotation for better UX
+    this.startAutoRotate();
   }
 
   ngOnDestroy(): void {
@@ -242,6 +256,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Navigate to menu with smooth scroll to top
   navigateToMenu(): void {
     this.router.navigate(['/menu']).then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Navigate to about page with smooth scroll to top
+  navigateToAbout(): void {
+    this.router.navigate(['/about']).then(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
