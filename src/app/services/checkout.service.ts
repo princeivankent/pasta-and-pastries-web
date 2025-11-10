@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, Inject, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Firestore, collection, addDoc, doc, getDoc, getDocs, updateDoc, query, where, Timestamp } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, getDoc, getDocs, updateDoc, query, where, Timestamp, collectionSnapshots } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { Observable, from, of, throwError } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
@@ -102,6 +102,24 @@ export class CheckoutService {
   }
 
   /**
+   * Get realtime updates for all orders for the current user
+   * Returns an observable that emits whenever orders change
+   */
+  getOrdersRealtime(userId: string): Observable<Order[]> {
+    if (!this.isBrowser) {
+      return of([]);
+    }
+
+    if (environment.useMockData) {
+      // In development mode, just return static data
+      const allOrders = this.getOrdersFromLocalStorage();
+      return of(allOrders.filter(order => order.userId === userId));
+    } else {
+      return this.getOrdersRealtimeFromFirestore(userId);
+    }
+  }
+
+  /**
    * Get a specific order by ID
    */
   getOrderById(orderId: string): Observable<Order | null> {
@@ -182,6 +200,28 @@ export class CheckoutService {
       }),
       catchError(error => {
         console.error('Error fetching orders from Firestore:', error);
+        return of([]);
+      })
+    );
+  }
+
+  private getOrdersRealtimeFromFirestore(userId: string): Observable<Order[]> {
+    const ordersCollection = collection(this.firestore, 'orders');
+    const userOrdersQuery = query(ordersCollection, where('userId', '==', userId));
+
+    return collectionSnapshots(userOrdersQuery).pipe(
+      map(snapshot => {
+        return snapshot.map(doc => {
+          const data = doc.data();
+          return {
+            ...data,
+            id: doc.id,
+            orderDate: data['orderDate']?.toDate() || new Date()
+          } as Order;
+        });
+      }),
+      catchError(error => {
+        console.error('Error fetching realtime orders from Firestore:', error);
         return of([]);
       })
     );

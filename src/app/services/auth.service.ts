@@ -1,5 +1,6 @@
-import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithPopup, signOut, GoogleAuthProvider, User, user } from '@angular/fire/auth';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Auth, signInWithPopup, signOut, GoogleAuthProvider, User, user, setPersistence, browserLocalPersistence } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,6 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private auth: Auth = inject(Auth);
+  private platformId = inject(PLATFORM_ID);
   private googleProvider = new GoogleAuthProvider();
 
   // Observable of current user
@@ -17,6 +19,13 @@ export class AuthService {
     this.googleProvider.setCustomParameters({
       prompt: 'select_account'
     });
+
+    // Set persistence to LOCAL (persists across browser sessions and page refreshes)
+    if (isPlatformBrowser(this.platformId)) {
+      setPersistence(this.auth, browserLocalPersistence).catch((error) => {
+        console.error('Error setting auth persistence:', error);
+      });
+    }
   }
 
   /**
