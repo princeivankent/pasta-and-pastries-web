@@ -58,8 +58,15 @@
           Experience the warmth of home-cooked meals and the joy of freshly baked pastries. We look forward to serving you!
         </p>
         <div class="card-actions justify-center mt-6">
-          <a routerLink="/contact" class="btn bg-medium-beige hover:bg-medium-beige/90 text-neutral border-none btn-lg rounded-xl">Get in Touch</a>
-          <a routerLink="/menu" class="btn btn-ghost hover:bg-white/10 btn-lg rounded-xl">View Menu</a>
+          <!-- <a routerLink="/contact" class="btn bg-medium-beige hover:bg-medium-beige/90 text-neutral border-none btn-lg rounded-xl">Get in Touch</a> -->
+          <!-- <a routerLink="/menu" class="btn btn-ghost hover:bg-white/10 btn-lg rounded-xl">View Menu</a> -->
+
+          <button (click)="navigateToContact()" class="btn bg-medium-beige hover:bg-medium-beige/90 text-neutral text-base border-none btn-lg rounded-xl px-3">
+            Get in Touch
+          </button>
+          <button (click)="navigateToMenu()" class="btn btn-ghost hover:bg-white/10 text-base border-none btn-lg rounded-xl px-3">
+            View Menu
+          </button>
         </div>
       </div>
     </div>

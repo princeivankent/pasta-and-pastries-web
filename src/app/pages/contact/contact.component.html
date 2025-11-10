@@ -60,17 +60,22 @@
         </div>
       </div>
 
-      <!-- Map Placeholder -->
+      <!-- Map Section -->
       <div class="card bg-base-200 shadow-xl">
         <div class="card-body p-8">
           <h2 class="card-title text-2xl mb-4">Location</h2>
-          <div class="w-full h-64 bg-base-300 rounded-lg flex items-center justify-center">
-            <div class="text-center text-base-content/50">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-              <p>Map placeholder</p>
-            </div>
+
+          <!-- Responsive Google Map -->
+          <div class="w-full h-64 md:h-96 rounded-lg overflow-hidden">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d483.74814431952865!2d121.14193849128496!3d14.078053637856858!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd6f0603bcf337%3A0x8c9745de40890a83!2sTanauan%20Park%20Place!5e0!3m2!1sen!2sph!4v1762749859339!5m2!1sen!2sph"
+              width="100%"
+              height="100%"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
           </div>
         </div>
       </div>
@@ -160,6 +165,7 @@
                     >
                       Send Message
                     </button>
+                    <span>(This section is still in development.)</span>
                   </td>
                 </tr>
               </tbody>
