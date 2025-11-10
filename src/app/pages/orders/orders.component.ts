@@ -151,4 +151,31 @@ export class OrdersComponent implements OnInit, OnDestroy {
   getItemPrice(item: any): number {
     return item.selectedVariant?.price || item.product.price;
   }
+
+  cancelOrder(orderId: string): void {
+    if (!confirm('Are you sure you want to cancel this order?')) {
+      return;
+    }
+
+    const ordersSub = this.checkoutService.updateOrderStatus(orderId, 'cancelled').subscribe({
+      next: (success) => {
+        if (success) {
+          console.log(`Order ${orderId} cancelled successfully`);
+          // The realtime listener will automatically update the UI
+        } else {
+          this.errorMessage = 'Failed to cancel order. Please try again.';
+        }
+      },
+      error: (error) => {
+        console.error('Error cancelling order:', error);
+        this.errorMessage = 'Failed to cancel order. Please try again.';
+      }
+    });
+
+    this.subscriptions.add(ordersSub);
+  }
+
+  canCancelOrder(status: Order['status']): boolean {
+    return status === 'pending';
+  }
 }
