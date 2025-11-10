@@ -20,7 +20,9 @@
           <button
             *ngFor="let option of statusOptions"
             (click)="onStatusFilterChange(option.value)"
-            [class]="'btn btn-sm px-4 ' + (selectedStatus === option.value ? 'btn-primary' : 'btn-ghost')"
+            class="btn btn-sm px-4"
+            [class.btn-primary]="selectedStatus === option.value"
+            [class.btn-ghost]="selectedStatus !== option.value"
           >
             {{ option.label }}
           </button>
@@ -51,7 +53,13 @@
               <h3 class="text-lg font-bold">{{ order.id }}</h3>
               <p class="text-sm text-base-content/70">{{ formatDate(order.orderDate) }}</p>
             </div>
-            <div class="badge badge-lg" [class]="getStatusBadgeClass(order.status)">
+            <div class="badge badge-lg"
+                 [class.badge-warning]="order.status === 'pending'"
+                 [class.badge-info]="order.status === 'confirmed'"
+                 [class.badge-primary]="order.status === 'preparing'"
+                 [class.badge-success]="order.status === 'ready'"
+                 [class.badge-neutral]="order.status === 'completed'"
+                 [class.badge-error]="order.status === 'cancelled'">
               {{ order.status | uppercase }}
             </div>
           </div>

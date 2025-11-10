@@ -2,8 +2,11 @@
 <div class="toast toast-bottom toast-end z-[100]">
   <div
     *ngFor="let toast of toasts"
-    [class]="getAlertClass(toast.type)"
-    class="animate-in slide-in-from-top-5 fade-in duration-300"
+    class="alert animate-in slide-in-from-top-5 fade-in duration-300"
+    [class.alert-success]="toast.type === 'success'"
+    [class.alert-error]="toast.type === 'error'"
+    [class.alert-warning]="toast.type === 'warning'"
+    [class.alert-info]="toast.type === 'info'"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
