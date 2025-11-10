@@ -28,6 +28,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isUserMenuOpen = false;
   isAddressDialogOpen = false;
   showWelcomeAddressDialog = false;
+  isClearCartModalOpen = false;
+  isCheckoutModalOpen = false;
   private cartCheckInterval: any;
   private isBrowser: boolean;
   private previousCartCount = 0;
@@ -129,9 +131,30 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearCart(): void {
+  openClearCartModal(): void {
+    this.isClearCartModalOpen = true;
+  }
+
+  closeClearCartModal(): void {
+    this.isClearCartModalOpen = false;
+  }
+
+  confirmClearCart(): void {
     this.cartService.clearCart();
     this.updateCart();
+    this.closeClearCartModal();
+  }
+
+  clearCart(): void {
+    this.openClearCartModal();
+  }
+
+  openCheckoutModal(): void {
+    this.isCheckoutModalOpen = true;
+  }
+
+  closeCheckoutModal(): void {
+    this.isCheckoutModalOpen = false;
   }
 
   proceedToCheckout(): void {
@@ -143,6 +166,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
       }
       return;
     }
+
+    // Show checkout confirmation modal
+    this.openCheckoutModal();
+  }
+
+  confirmCheckout(): void {
+    this.closeCheckoutModal();
 
     // Get user's delivery address and create order
     this.addressService.getUserAddress().subscribe({
