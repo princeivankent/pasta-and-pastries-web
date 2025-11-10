@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isAutoRotating: boolean = true;
   selectedImageUrl: string = '';
   selectedImageName: string = '';
+  isLoadingProducts: boolean = true;
 
   // Swipe/Drag functionality
   isDragging: boolean = false;
@@ -56,16 +57,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.productsService.getBestSellers().subscribe({
       next: (products) => {
         this.bestSellers = products;
+        this.isLoadingProducts = false;
       },
       error: (error) => {
         console.error('Error loading best sellers:', error);
         this.bestSellers = [];
+        this.isLoadingProducts = false;
       }
     });
 
     this.testimonials = this.testimonialsService.getAllTestimonials();
-    // Temporarily disabled auto-rotation - can be re-enabled later
-    // this.startAutoRotate();
+    // Re-enabled auto-rotation for better UX
+    this.startAutoRotate();
   }
 
   ngOnDestroy(): void {
@@ -242,6 +245,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Navigate to menu with smooth scroll to top
   navigateToMenu(): void {
     this.router.navigate(['/menu']).then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Navigate to about page with smooth scroll to top
+  navigateToAbout(): void {
+    this.router.navigate(['/about']).then(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
