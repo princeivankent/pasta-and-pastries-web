@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { CheckoutService } from '../../../services/checkout.service';
 import { ToastService } from '../../../services/toast.service';
+import { NotificationService } from '../../../services/notification.service';
 import { Order } from '../../../models/order';
 import { Subscription } from 'rxjs';
 
@@ -37,6 +38,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private adminService: AdminService,
     private checkoutService: CheckoutService,
     private toastService: ToastService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -49,7 +51,18 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       // Check for new orders
       if (this.previousOrderCount > 0 && orders.length > this.previousOrderCount) {
         const newOrdersCount = orders.length - this.previousOrderCount;
+
+        // Show toast notification
         this.toastService.info(`${newOrdersCount} new order${newOrdersCount > 1 ? 's' : ''} received!`, 5000);
+
+        // Play notification sound
+        this.notificationService.playNotificationSound();
+
+        // Optional: Show browser notification if permission granted
+        this.notificationService.showBrowserNotification(
+          'New Order Received!',
+          `You have ${newOrdersCount} new order${newOrdersCount > 1 ? 's' : ''} to process.`
+        );
       }
 
       this.previousOrderCount = orders.length;
@@ -160,6 +173,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       minute: '2-digit',
       hour12: true
     });
+  }
+
+  async enableNotifications(): Promise<void> {
+    const granted = await this.notificationService.requestNotificationPermission();
+    if (granted) {
+      this.toastService.success('Browser notifications enabled!');
+    } else {
+      this.toastService.warning('Notification permission denied. You can still receive in-app notifications.');
+    }
   }
 
   logout(): void {
