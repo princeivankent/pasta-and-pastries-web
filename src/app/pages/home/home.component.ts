@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductsService } from '../../services/products.service';
@@ -7,6 +7,7 @@ import { TestimonialsService } from '../../services/testimonials.service';
 import { SeoService } from '../../services/seo.service';
 import { Product } from '../../models/product';
 import { Testimonial } from '../../models/testimonial';
+import { timeout, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -36,7 +37,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private productsService: ProductsService,
     private testimonialsService: TestimonialsService,
     private seoService: SeoService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -53,22 +55,39 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Add LocalBusiness structured data
     this.seoService.addStructuredData(this.seoService.getLocalBusinessSchema());
 
-    // Subscribe to best sellers from ProductsService (now returns Observable)
-    this.productsService.getBestSellers().subscribe({
-      next: (products) => {
-        this.bestSellers = products;
-        this.isLoadingProducts = false;
-      },
-      error: (error) => {
-        console.error('Error loading best sellers:', error);
-        this.bestSellers = [];
-        this.isLoadingProducts = false;
-      }
-    });
-
+    // Load testimonials (synchronous, no Firestore dependency)
     this.testimonials = this.testimonialsService.getAllTestimonials();
-    // Re-enabled auto-rotation for better UX
-    this.startAutoRotate();
+
+    // Only load products from Firestore in the browser (not during SSR)
+    if (isPlatformBrowser(this.platformId)) {
+      // Subscribe to best sellers with timeout to prevent infinite loading
+      this.productsService.getBestSellers()
+        .pipe(
+          timeout(10000), // 10 second timeout
+          catchError((error) => {
+            console.error('Error loading best sellers:', error);
+            return of([]); // Return empty array on error
+          })
+        )
+        .subscribe({
+          next: (products) => {
+            this.bestSellers = products;
+            this.isLoadingProducts = false;
+          },
+          error: (error) => {
+            console.error('Error loading best sellers:', error);
+            this.bestSellers = [];
+            this.isLoadingProducts = false;
+          }
+        });
+
+      // Re-enabled auto-rotation for better UX
+      this.startAutoRotate();
+    } else {
+      // During SSR, set loading to false and use empty products
+      this.isLoadingProducts = false;
+      this.bestSellers = [];
+    }
   }
 
   ngOnDestroy(): void {
