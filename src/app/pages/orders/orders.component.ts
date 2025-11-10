@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CheckoutService } from '../../services/checkout.service';
 import { AuthService } from '../../services/auth.service';
 import { SeoService } from '../../services/seo.service';
 import { Order } from '../../models/order';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-orders',
@@ -12,7 +13,7 @@ import { Order } from '../../models/order';
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
   private checkoutService = inject(CheckoutService);
   private authService = inject(AuthService);
   private seoService = inject(SeoService);
@@ -22,6 +23,7 @@ export class OrdersComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
   currentUser$ = this.authService.user$;
+  private subscriptions = new Subscription();
 
   constructor() {}
 
@@ -35,14 +37,39 @@ export class OrdersComponent implements OnInit {
       type: 'website'
     });
 
-    this.loadOrders();
+    // Subscribe to auth state and load orders when user is authenticated
+    const authSub = this.authService.user$.subscribe({
+      next: (user) => {
+        if (user) {
+          // User is signed in, start listening to orders in realtime
+          this.loadOrdersRealtime(user.uid);
+        } else {
+          // User is not signed in
+          this.isLoading = false;
+          this.orders = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error with auth state:', error);
+        this.isLoading = false;
+        this.errorMessage = 'Authentication error. Please try again.';
+      }
+    });
+
+    this.subscriptions.add(authSub);
   }
 
-  loadOrders(): void {
+  ngOnDestroy(): void {
+    // Clean up all subscriptions
+    this.subscriptions.unsubscribe();
+  }
+
+  loadOrdersRealtime(userId: string): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.checkoutService.getOrders().subscribe({
+    // Subscribe to realtime orders updates
+    const ordersSub = this.checkoutService.getOrdersRealtime(userId).subscribe({
       next: (orders) => {
         // Sort orders by date (newest first)
         this.orders = orders.sort((a, b) =>
@@ -56,13 +83,14 @@ export class OrdersComponent implements OnInit {
         this.isLoading = false;
       }
     });
+
+    this.subscriptions.add(ordersSub);
   }
 
   async signInWithGoogle(): Promise<void> {
     try {
       await this.authService.signInWithGoogle();
-      // After successful sign-in, reload orders
-      this.loadOrders();
+      // Orders will be loaded automatically via the auth state subscription
     } catch (error) {
       console.error('Sign in failed:', error);
     }
