@@ -1,12 +1,22 @@
 // Admin products styles
-.rotate-90 {
-  transform: rotate(90deg);
+
+// Animation for expanded sections
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-in-out;
 }
 
-.btn-xs {
-  min-height: 1.5rem;
-  height: 1.5rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  font-size: 0.75rem;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Rotation for chevron
+.rotate-180 {
+  transform: rotate(180deg);
 }
