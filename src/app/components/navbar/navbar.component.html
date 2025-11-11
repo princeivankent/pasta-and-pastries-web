@@ -112,7 +112,7 @@
                   <div class="text-xs text-gray-500 truncate">{{ currentUser.email }}</div>
                 </div>
                 <div class="flex justify-end">
-                  <button (click)="signOut()" class="btn btn-sm bg-red-500 hover:bg-red-600 text-white border border-red-500 p-2 gap-2">
+                  <button (click)="signOut()" class="btn btn-sm bg-red-500 hover:bg-red-600 text-white border border-red-500 px-4 py-2 gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
@@ -237,7 +237,7 @@
             <div class="flex justify-end">
               <button
                 (click)="signOut(); closeMobileMenu()"
-                class="btn btn-sm bg-red-500 hover:bg-red-600 text-white border border-red-500 gap-2"
+                class="btn btn-sm bg-red-500 hover:bg-red-600 text-white border border-red-500 px-4 gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -276,7 +276,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           <p class="text-base-content/70 font-body">Your cart is empty</p>
-          <a routerLink="/menu" (click)="closeCart()" class="btn btn-sm bg-olive-green text-white hover:bg-olive-green/90 border-none mt-4">Browse Menu</a>
+          <a routerLink="/menu" (click)="closeCart()" class="btn btn-sm bg-olive-green text-white hover:bg-olive-green/90 border-none mt-4 px-6">Browse Menu</a>
         </div>
 
         <div *ngIf="cartItems.length > 0" class="space-y-4">
@@ -320,10 +320,10 @@
           <span class="font-heading">Total:</span>
           <span class="text-olive-green">₱{{ cartTotal }}</span>
         </div>
-        <button (click)="proceedToCheckout()" class="btn btn-lg w-full bg-olive-green text-white hover:bg-olive-green/90 border-none">
+        <button (click)="proceedToCheckout()" class="btn btn-lg w-full bg-olive-green text-white hover:bg-olive-green/90 border-none px-6">
           {{ currentUser ? 'Checkout' : 'Sign in to Checkout' }}
         </button>
-        <button (click)="clearCart()" class="btn btn-sm btn-outline w-full">
+        <button (click)="clearCart()" class="btn btn-sm btn-outline w-full px-4">
           Clear Cart
         </button>
       </div>
@@ -350,14 +350,14 @@
       <button
         type="button"
         (click)="closeClearCartModal()"
-        class="btn bg-ghost px-2"
+        class="btn bg-ghost px-4"
       >
         Cancel
       </button>
       <button
         type="button"
         (click)="confirmClearCart()"
-        class="btn bg-error text-white px-2"
+        class="btn bg-error text-white px-4"
       >
         Clear Cart
       </button>
@@ -388,14 +388,14 @@
       <button
         type="button"
         (click)="closeCheckoutModal()"
-        class="btn px-2"
+        class="btn px-4"
       >
         Cancel
       </button>
       <button
         type="button"
         (click)="confirmCheckout()"
-        class="btn bg-olive-green text-white hover:bg-olive-green/90 px-2 border-none"
+        class="btn bg-olive-green text-white hover:bg-olive-green/90 px-6 border-none"
       >
         Confirm & Place Order
       </button>
