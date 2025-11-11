@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   testimonials: Testimonial[] = [];
   currentSlide: number = 0;
   private autoRotateInterval: any;
+  private productsSubscription: any;
   isAutoRotating: boolean = true;
   selectedImageUrl: string = '';
   selectedImageName: string = '';
@@ -57,10 +58,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Load testimonials (synchronous, no Firestore dependency)
     this.testimonials = this.testimonialsService.getAllTestimonials();
 
-    // Subscribe to best sellers with timeout to prevent infinite loading
-    this.productsService.getBestSellers()
+    // Subscribe to real-time best sellers updates with timeout to prevent infinite loading
+    this.productsSubscription = this.productsService.getBestSellersRealtime()
       .pipe(
-        timeout(10000), // 10 second timeout
+        timeout(10000), // 10 second timeout for initial load
         catchError((error) => {
           console.error('Error loading best sellers:', error);
           return of([]); // Return empty array on error
@@ -84,6 +85,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopAutoRotate();
+
+    // Clean up product subscription to prevent memory leaks
+    if (this.productsSubscription) {
+      this.productsSubscription.unsubscribe();
+    }
   }
 
   getStars(rating: number): number[] {

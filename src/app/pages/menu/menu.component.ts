@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductsService } from '../../services/products.service';
 import { SeoService } from '../../services/seo.service';
@@ -11,10 +12,11 @@ import { Product } from '../../models/product';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, OnDestroy {
   allProducts: Product[] = [];
   filteredProducts: Product[] = [];
   selectedCategory: 'all' | 'pasta' | 'pastry' = 'all';
+  private productsSubscription?: Subscription;
 
   constructor(
     private productsService: ProductsService,
@@ -32,11 +34,12 @@ export class MenuComponent implements OnInit {
       type: 'website'
     });
 
-    // Load all products (now returns Observable)
-    this.productsService.getAllProducts().subscribe({
+    // Subscribe to real-time product updates
+    this.productsSubscription = this.productsService.getAllProductsRealtime().subscribe({
       next: (products) => {
         this.allProducts = products;
-        this.filteredProducts = this.allProducts;
+        // Re-apply filter when products update
+        this.filterByCategory(this.selectedCategory);
       },
       error: (error) => {
         console.error('Error loading products:', error);
@@ -44,6 +47,13 @@ export class MenuComponent implements OnInit {
         this.filteredProducts = [];
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscription to prevent memory leaks
+    if (this.productsSubscription) {
+      this.productsSubscription.unsubscribe();
+    }
   }
 
   filterByCategory(category: 'all' | 'pasta' | 'pastry'): void {
