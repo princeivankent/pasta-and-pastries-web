@@ -10,7 +10,7 @@
         <div class="flex gap-2 items-center">
           <button
             (click)="enableNotifications()"
-            class="btn btn-outline btn-sm gap-2"
+            class="btn bg-white hover:bg-gray-50 border border-gray-300 btn-sm gap-2"
             title="Enable browser notifications"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -33,9 +33,10 @@
             *ngFor="let option of statusOptions"
             (click)="onStatusFilterChange(option.value)"
             class="btn btn-sm px-4"
-            [class.bg-sky-500]="selectedStatus === option.value"
-            [class.text-white]="selectedStatus === option.value"
-            [class.bg-ghost]="selectedStatus !== option.value"
+            [ngClass]="{
+              'bg-sky-500 hover:bg-sky-600 text-white': selectedStatus === option.value,
+              'bg-gray-100 hover:bg-gray-200 text-gray-700': selectedStatus !== option.value
+            }"
           >
             {{ option.label }}
           </button>
@@ -122,14 +123,14 @@
               <button
                 *ngIf="canAdvanceStatus(order.status)"
                 (click)="advanceOrderStatus(order)"
-                class="btn bg-indigo-500 text-white btn-sm px-2"
+                class="btn bg-indigo-500 hover:bg-indigo-600 text-white btn-sm px-2"
               >
                 Mark as {{ getNextStatus(order.status) }}
               </button>
               <button
                 *ngIf="order.status !== 'cancelled' && order.status !== 'completed'"
                 (click)="cancelOrder(order.id)"
-                class="btn btn-sm btn-outline btn-error"
+                class="btn btn-sm bg-white hover:bg-red-50 border border-red-500 text-red-500"
               >
                 Cancel
               </button>

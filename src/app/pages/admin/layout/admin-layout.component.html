@@ -4,7 +4,7 @@
     <!-- Mobile Header -->
     <div class="w-full navbar bg-base-300 lg:hidden">
       <div class="flex-none">
-        <label for="admin-drawer" class="btn btn-square btn-ghost">
+        <label for="admin-drawer" class="btn btn-square bg-transparent hover:bg-gray-100">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
@@ -12,7 +12,7 @@
       </div>
       <div class="flex-1 px-2 mx-2">Admin Dashboard</div>
       <div class="flex-none">
-        <button (click)="logout()" class="btn btn-sm btn-ghost">
+        <button (click)="logout()" class="btn btn-sm bg-transparent hover:bg-gray-100">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
@@ -66,7 +66,7 @@
 
       <!-- Logout button (Desktop) -->
       <div class="p-4 border-t border-base-300 hidden lg:block">
-        <button (click)="logout()" class="btn btn-outline btn-sm w-full gap-2">
+        <button (click)="logout()" class="btn bg-white hover:bg-gray-50 border border-gray-300 btn-sm w-full gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>

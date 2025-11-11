@@ -14,7 +14,7 @@
       <button
         *ngIf="!isWelcomeDialog"
         (click)="close()"
-        class="btn btn-sm btn-circle btn-ghost"
+        class="btn btn-sm btn-circle bg-transparent hover:bg-gray-100"
         aria-label="Close dialog"
       >✕</button>
     </div>
@@ -69,7 +69,7 @@
           *ngIf="isWelcomeDialog"
           type="button"
           (click)="skip()"
-          class="btn btn-ghost"
+          class="btn bg-transparent hover:bg-gray-100"
           [disabled]="isSubmitting"
         >
           Skip for now
@@ -78,7 +78,7 @@
           *ngIf="!isWelcomeDialog"
           type="button"
           (click)="close()"
-          class="btn btn-ghost"
+          class="btn bg-transparent hover:bg-gray-100"
           [disabled]="isSubmitting"
         >
           Cancel
