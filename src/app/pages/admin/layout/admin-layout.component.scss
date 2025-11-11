@@ -1,0 +1,13 @@
+// Admin layout styles
+.drawer-side {
+  z-index: 10;
+}
+
+.menu {
+  li a {
+    &.active {
+      background-color: hsl(var(--p));
+      color: hsl(var(--pc));
+    }
+  }
+}

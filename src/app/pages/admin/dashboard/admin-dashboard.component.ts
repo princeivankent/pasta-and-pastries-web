@@ -183,10 +183,4 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this.toastService.warning('Notification permission denied. You can still receive in-app notifications.');
     }
   }
-
-  logout(): void {
-    this.adminService.logout();
-    this.toastService.success('Logged out successfully');
-    this.router.navigate(['/admin/login']);
-  }
 }
