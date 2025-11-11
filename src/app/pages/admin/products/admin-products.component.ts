@@ -20,6 +20,12 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   expandedProductId: string | null = null;
   private productsSubscription?: Subscription;
 
+  // Confirmation modal state
+  isConfirmModalOpen: boolean = false;
+  pendingChangeProduct: Product | null = null;
+  pendingChangeVariant: ProductVariant | null = null;
+  pendingChangeStatus: ProductStatus | null = null;
+
   categoryOptions = [
     { value: 'all', label: 'All Products' },
     { value: 'pasta', label: 'Pasta' },
@@ -108,5 +114,44 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
 
   getStatusLabel(status?: ProductStatus): string {
     return status || 'available';
+  }
+
+  confirmStatusChange(product: Product, status: ProductStatus, variant: ProductVariant | null): void {
+    this.pendingChangeProduct = product;
+    this.pendingChangeVariant = variant;
+    this.pendingChangeStatus = status;
+    this.isConfirmModalOpen = true;
+  }
+
+  closeConfirmModal(): void {
+    this.isConfirmModalOpen = false;
+    this.pendingChangeProduct = null;
+    this.pendingChangeVariant = null;
+    this.pendingChangeStatus = null;
+  }
+
+  async confirmAndApplyStatusChange(): Promise<void> {
+    if (!this.pendingChangeProduct || !this.pendingChangeStatus) {
+      return;
+    }
+
+    try {
+      if (this.pendingChangeVariant) {
+        // Update variant status
+        await this.updateVariantStatus(
+          this.pendingChangeProduct,
+          this.pendingChangeVariant,
+          this.pendingChangeStatus
+        );
+      } else {
+        // Update product status
+        await this.updateProductStatus(
+          this.pendingChangeProduct,
+          this.pendingChangeStatus
+        );
+      }
+    } finally {
+      this.closeConfirmModal();
+    }
   }
 }

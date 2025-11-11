@@ -73,12 +73,17 @@
                 <div class="flex flex-wrap gap-2">
                   <button
                     *ngFor="let status of statusOptions"
-                    (click)="updateProductStatus(product, status)"
+                    (click)="confirmStatusChange(product, status, null)"
                     class="btn btn-sm"
-                    [class.btn-success]="status === 'available'"
-                    [class.btn-warning]="status === 'sold-out'"
-                    [class.btn-error]="status === 'unavailable'"
-                    [class.btn-outline]="(product.status || 'available') !== status"
+                    [ngClass]="{
+                      'bg-green-500 hover:bg-green-600 text-white': status === 'available' && (product.status || 'available') === status,
+                      'bg-yellow-500 hover:bg-yellow-600 text-white': status === 'sold-out' && (product.status || 'available') === status,
+                      'bg-red-500 hover:bg-red-600 text-white': status === 'unavailable' && (product.status || 'available') === status,
+                      'border-green-500 text-green-500 hover:bg-green-50': status === 'available' && (product.status || 'available') !== status,
+                      'border-yellow-500 text-yellow-500 hover:bg-yellow-50': status === 'sold-out' && (product.status || 'available') !== status,
+                      'border-red-500 text-red-500 hover:bg-red-50': status === 'unavailable' && (product.status || 'available') !== status,
+                      'border': (product.status || 'available') !== status
+                    }"
                     [disabled]="(product.status || 'available') === status"
                   >
                     <svg *ngIf="(product.status || 'available') === status" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -94,7 +99,7 @@
                 <div class="divider my-2"></div>
                 <button
                   (click)="toggleProductExpand(product.id)"
-                  class="btn btn-sm btn-ghost w-full justify-between"
+                  class="btn btn-sm bg-transparent hover:bg-gray-100 w-full justify-between"
                 >
                   <span class="font-semibold">Variants ({{ product.variants.length }})</span>
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-200" [class.rotate-180]="isProductExpanded(product.id)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -122,12 +127,17 @@
                         <div class="flex flex-wrap gap-2">
                           <button
                             *ngFor="let status of statusOptions"
-                            (click)="updateVariantStatus(product, variant, status)"
+                            (click)="confirmStatusChange(product, status, variant)"
                             class="btn btn-xs"
-                            [class.btn-success]="status === 'available'"
-                            [class.btn-warning]="status === 'sold-out'"
-                            [class.btn-error]="status === 'unavailable'"
-                            [class.btn-outline]="(variant.status || 'available') !== status"
+                            [ngClass]="{
+                              'bg-green-500 hover:bg-green-600 text-white': status === 'available' && (variant.status || 'available') === status,
+                              'bg-yellow-500 hover:bg-yellow-600 text-white': status === 'sold-out' && (variant.status || 'available') === status,
+                              'bg-red-500 hover:bg-red-600 text-white': status === 'unavailable' && (variant.status || 'available') === status,
+                              'border-green-500 text-green-500 hover:bg-green-50': status === 'available' && (variant.status || 'available') !== status,
+                              'border-yellow-500 text-yellow-500 hover:bg-yellow-50': status === 'sold-out' && (variant.status || 'available') !== status,
+                              'border-red-500 text-red-500 hover:bg-red-50': status === 'unavailable' && (variant.status || 'available') !== status,
+                              'border': (variant.status || 'available') !== status
+                            }"
                             [disabled]="(variant.status || 'available') === status"
                           >
                             <svg *ngIf="(variant.status || 'available') === status" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
@@ -147,4 +157,39 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div *ngIf="isConfirmModalOpen" class="modal modal-open">
+  <div class="modal-box">
+    <h3 class="font-bold text-xl mb-4">Confirm Status Change</h3>
+    <p class="text-base-content/70 mb-6">
+      Are you sure you want to change the status
+      <span *ngIf="pendingChangeVariant">of variant <strong>{{ pendingChangeVariant.label }}</strong></span>
+      <span *ngIf="!pendingChangeVariant">of <strong>{{ pendingChangeProduct?.name }}</strong></span>
+      to <strong class="capitalize">{{ pendingChangeStatus }}</strong>?
+    </p>
+    <div class="modal-action">
+      <button
+        type="button"
+        (click)="closeConfirmModal()"
+        class="btn bg-gray-100 hover:bg-gray-200 text-gray-700"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        (click)="confirmAndApplyStatusChange()"
+        class="btn text-white"
+        [ngClass]="{
+          'bg-green-500 hover:bg-green-600': pendingChangeStatus === 'available',
+          'bg-yellow-500 hover:bg-yellow-600': pendingChangeStatus === 'sold-out',
+          'bg-red-500 hover:bg-red-600': pendingChangeStatus === 'unavailable'
+        }"
+      >
+        Confirm
+      </button>
+    </div>
+  </div>
+  <div class="modal-backdrop bg-black/50" (click)="closeConfirmModal()"></div>
 </div>
