@@ -297,7 +297,7 @@
                     <button (click)="decrementQuantity(i)" class="btn btn-xs btn-circle btn-outline">−</button>
                     <span class="text-sm font-semibold w-8 text-center">{{ item.quantity }}</span>
                     <button (click)="incrementQuantity(i)" class="btn btn-xs btn-circle btn-outline">+</button>
-                    <button (click)="removeItem(i)" class="btn btn-xs btn-error btn-outline ml-auto">Remove</button>
+                    <button (click)="removeItem(i)" class="btn btn-xs btn-outline px-2 ml-auto">Remove</button>
                   </div>
                 </div>
               </div>
@@ -323,7 +323,7 @@
         <button (click)="proceedToCheckout()" class="btn btn-lg w-full bg-olive-green text-white hover:bg-olive-green/90 border-none">
           {{ currentUser ? 'Checkout' : 'Sign in to Checkout' }}
         </button>
-        <button (click)="clearCart()" class="btn btn-sm btn-outline btn-error w-full">
+        <button (click)="clearCart()" class="btn btn-sm btn-outline w-full">
           Clear Cart
         </button>
       </div>
@@ -350,14 +350,14 @@
       <button
         type="button"
         (click)="closeClearCartModal()"
-        class="btn btn-ghost"
+        class="btn bg-ghost px-2"
       >
         Cancel
       </button>
       <button
         type="button"
         (click)="confirmClearCart()"
-        class="btn btn-error"
+        class="btn bg-error text-white px-2"
       >
         Clear Cart
       </button>
@@ -388,14 +388,14 @@
       <button
         type="button"
         (click)="closeCheckoutModal()"
-        class="btn btn-ghost"
+        class="btn px-2"
       >
         Cancel
       </button>
       <button
         type="button"
         (click)="confirmCheckout()"
-        class="btn bg-olive-green text-white hover:bg-olive-green/90 border-none"
+        class="btn bg-olive-green text-white hover:bg-olive-green/90 px-2 border-none"
       >
         Confirm & Place Order
       </button>
