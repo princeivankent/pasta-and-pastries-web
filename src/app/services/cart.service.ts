@@ -16,9 +16,11 @@ interface FirestoreCart {
 })
 export class CartService {
   private readonly CART_STORAGE_KEY = 'pasta-haus-cart';
+  private readonly MERGE_COMPLETED_KEY = 'pasta-haus-cart-merged';
   private isBrowser: boolean;
   private useMockData = environment.useMockData;
   private cartSyncInProgress = false;
+  private mergedUserId: string | null = null;
 
   constructor(
     @Inject(PLATFORM_ID) platformId: Object,
@@ -30,7 +32,13 @@ export class CartService {
     // Subscribe to auth state changes to sync cart
     this.authService.user$.subscribe(user => {
       if (user) {
-        this.handleUserSignIn();
+        this.handleUserSignIn(user.uid);
+      } else {
+        // User signed out - reset merge tracking
+        this.mergedUserId = null;
+        if (this.isBrowser) {
+          sessionStorage.removeItem(this.MERGE_COMPLETED_KEY);
+        }
       }
     });
   }
@@ -100,6 +108,9 @@ export class CartService {
 
     // Clear localStorage
     localStorage.removeItem(this.CART_STORAGE_KEY);
+
+    // Clear merge tracking
+    sessionStorage.removeItem(this.MERGE_COMPLETED_KEY);
 
     // Clear Firestore if using production mode and user is authenticated
     if (!this.useMockData && this.authService.getCurrentUser()) {
@@ -176,8 +187,15 @@ export class CartService {
     return [];
   }
 
-  private async handleUserSignIn(): Promise<void> {
+  private async handleUserSignIn(userId: string): Promise<void> {
     if (!this.isBrowser || this.useMockData || this.cartSyncInProgress) {
+      return;
+    }
+
+    // Check if we've already merged for this user in this session
+    const mergeCompletedKey = sessionStorage.getItem(this.MERGE_COMPLETED_KEY);
+    if (this.mergedUserId === userId || mergeCompletedKey === userId) {
+      console.log('Cart merge already completed for this user in this session');
       return;
     }
 
@@ -190,14 +208,34 @@ export class CartService {
       // Load cart from Firestore
       const firestoreCart = await this.loadCartFromFirestore();
 
-      // Merge carts
-      const mergedCart = this.mergeCarts(localCart, firestoreCart);
+      // Only merge if there's something to merge
+      let finalCart: CartItem[];
+
+      if (localCart.length === 0) {
+        // No local cart - just use Firestore cart
+        finalCart = firestoreCart;
+        console.log('Using Firestore cart (no local items)');
+      } else if (firestoreCart.length === 0) {
+        // No Firestore cart - use local cart
+        finalCart = localCart;
+        console.log('Using local cart (no Firestore items)');
+      } else {
+        // Both exist - merge them
+        finalCart = this.mergeCarts(localCart, firestoreCart);
+        console.log('Merged local and Firestore carts');
+      }
 
       // Save merged cart to localStorage
-      localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(mergedCart));
+      localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(finalCart));
 
       // Sync to Firestore
-      await this.syncCartToFirestore(mergedCart);
+      await this.syncCartToFirestore(finalCart);
+
+      // Mark merge as completed for this user
+      this.mergedUserId = userId;
+      sessionStorage.setItem(this.MERGE_COMPLETED_KEY, userId);
+
+      console.log('Cart merge completed successfully');
     } catch (error) {
       console.error('Error handling user sign-in for cart:', error);
     } finally {
