@@ -74,7 +74,7 @@
                   <button
                     *ngFor="let status of statusOptions"
                     (click)="confirmStatusChange(product, status, null)"
-                    class="btn btn-sm"
+                    class="btn btn-sm px-4"
                     [ngClass]="{
                       'bg-green-500 hover:bg-green-600 text-white': status === 'available' && (product.status || 'available') === status,
                       'bg-yellow-500 hover:bg-yellow-600 text-white': status === 'sold-out' && (product.status || 'available') === status,
@@ -99,7 +99,7 @@
                 <div class="divider my-2"></div>
                 <button
                   (click)="toggleProductExpand(product.id)"
-                  class="btn btn-sm bg-transparent hover:bg-gray-100 w-full justify-between"
+                  class="btn btn-sm bg-transparent hover:bg-gray-100 w-full justify-between px-4"
                 >
                   <span class="font-semibold">Variants ({{ product.variants.length }})</span>
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-200" [class.rotate-180]="isProductExpanded(product.id)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,7 +128,7 @@
                           <button
                             *ngFor="let status of statusOptions"
                             (click)="confirmStatusChange(product, status, variant)"
-                            class="btn btn-xs"
+                            class="btn btn-xs px-3"
                             [ngClass]="{
                               'bg-green-500 hover:bg-green-600 text-white': status === 'available' && (variant.status || 'available') === status,
                               'bg-yellow-500 hover:bg-yellow-600 text-white': status === 'sold-out' && (variant.status || 'available') === status,
@@ -173,14 +173,14 @@
       <button
         type="button"
         (click)="closeConfirmModal()"
-        class="btn bg-gray-100 hover:bg-gray-200 text-gray-700"
+        class="btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-4"
       >
         Cancel
       </button>
       <button
         type="button"
         (click)="confirmAndApplyStatusChange()"
-        class="btn text-white"
+        class="btn text-white px-4"
         [ngClass]="{
           'bg-green-500 hover:bg-green-600': pendingChangeStatus === 'available',
           'bg-yellow-500 hover:bg-yellow-600': pendingChangeStatus === 'sold-out',
