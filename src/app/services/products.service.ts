@@ -1,11 +1,38 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Firestore, collection, collectionData, doc, docData, query, where, updateDoc } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
-import { map, catchError, take } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
+import { map, catchError, take, shareReplay, filter } from 'rxjs/operators';
 import { Product, ProductStatus } from '../models/product';
 import { environment } from '../../environments/environment';
 
+/**
+ * OPTIMIZATION STRATEGY FOR FIREBASE SPARK (FREE) PLAN:
+ *
+ * 1. SHARED SUBSCRIPTIONS: Only ONE Firestore listener per query, even with multiple subscribers
+ *    - Prevents multiple connections from home/menu/admin components
+ *    - Reduces connection overhead and memory usage
+ *
+ * 2. FIRESTORE CACHE (enabled in app.config.ts):
+ *    - Uses IndexedDB persistence for offline-first data access
+ *    - Serves cached data immediately, reducing network reads
+ *    - Updates cache when Firestore sends changes
+ *
+ * 3. REAL-TIME UPDATES:
+ *    - Customers see sold-out status immediately (prevents adding unavailable items to cart)
+ *    - Admin sees instant updates when changing product status
+ *    - Only changed documents trigger reads (not full collection re-reads)
+ *
+ * 4. INACTIVE TAB BEHAVIOR:
+ *    - Firestore listeners remain active in background tabs
+ *    - Still consumes reads when updates occur (unavoidable with real-time)
+ *    - Firestore automatically switches to long-polling in inactive tabs (more efficient than WebSocket)
+ *
+ * EXPECTED COST (50k reads/day free limit):
+ * - Initial load: ~10 reads per customer (served from cache on reload)
+ * - Admin updates: 1 read per connected customer per update
+ * - Example: 100 active customers + 5 updates/day = 500 reads/day (well within limit)
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +40,15 @@ export class ProductsService {
   private firestore = inject(Firestore);
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
+
+  // Shared observables to prevent multiple Firestore listeners
+  private allProductsSubject$ = new BehaviorSubject<Product[]>([]);
+  private allProductsSubscription?: Subscription;
+  private isLoadingProducts = false;
+
+  private bestSellersSubject$ = new BehaviorSubject<Product[]>([]);
+  private bestSellersSubscription?: Subscription;
+  private isLoadingBestSellers = false;
 
   // Mock data for development (to avoid Firestore read costs)
   private mockProducts: Product[] = [
@@ -105,7 +141,8 @@ export class ProductsService {
   }
 
   /**
-   * Get all products with real-time updates (for admin)
+   * Get all products with real-time updates - SHARED subscription
+   * Multiple components can subscribe without creating multiple Firestore listeners
    */
   getAllProductsRealtime(): Observable<Product[]> {
     // Use mock data during SSR or when explicitly configured
@@ -113,13 +150,27 @@ export class ProductsService {
       return of(this.mockProducts);
     }
 
-    const productsCollection = collection(this.firestore, 'products');
-    return collectionData(productsCollection, { idField: 'id' }).pipe(
-      map(products => products as Product[]),
-      catchError(error => {
-        console.error('Error fetching products from Firestore:', error);
-        return of(this.mockProducts);
-      })
+    // Initialize the shared subscription only once
+    if (!this.allProductsSubscription && !this.isLoadingProducts) {
+      this.isLoadingProducts = true;
+      const productsCollection = collection(this.firestore, 'products');
+
+      this.allProductsSubscription = collectionData(productsCollection, { idField: 'id' }).pipe(
+        map(products => products as Product[]),
+        catchError(error => {
+          console.error('Error fetching products from Firestore:', error);
+          this.isLoadingProducts = false;
+          return of(this.mockProducts);
+        })
+      ).subscribe(products => {
+        this.allProductsSubject$.next(products);
+        this.isLoadingProducts = false;
+      });
+    }
+
+    // Return the shared observable - all subscribers share the same Firestore listener
+    return this.allProductsSubject$.asObservable().pipe(
+      filter(products => products.length > 0 || !this.isLoadingProducts)
     );
   }
 
@@ -146,7 +197,8 @@ export class ProductsService {
   }
 
   /**
-   * Get best seller products with real-time updates
+   * Get best seller products with real-time updates - SHARED subscription
+   * Multiple components can subscribe without creating multiple Firestore listeners
    */
   getBestSellersRealtime(): Observable<Product[]> {
     // Use mock data during SSR or when explicitly configured
@@ -154,15 +206,28 @@ export class ProductsService {
       return of(this.mockProducts.filter(p => p.isBestSeller));
     }
 
-    const productsCollection = collection(this.firestore, 'products');
-    const bestSellersQuery = query(productsCollection, where('isBestSeller', '==', true));
+    // Initialize the shared subscription only once
+    if (!this.bestSellersSubscription && !this.isLoadingBestSellers) {
+      this.isLoadingBestSellers = true;
+      const productsCollection = collection(this.firestore, 'products');
+      const bestSellersQuery = query(productsCollection, where('isBestSeller', '==', true));
 
-    return collectionData(bestSellersQuery, { idField: 'id' }).pipe(
-      map(products => products as Product[]),
-      catchError(error => {
-        console.error('Error fetching best sellers from Firestore:', error);
-        return of(this.mockProducts.filter(p => p.isBestSeller));
-      })
+      this.bestSellersSubscription = collectionData(bestSellersQuery, { idField: 'id' }).pipe(
+        map(products => products as Product[]),
+        catchError(error => {
+          console.error('Error fetching best sellers from Firestore:', error);
+          this.isLoadingBestSellers = false;
+          return of(this.mockProducts.filter(p => p.isBestSeller));
+        })
+      ).subscribe(products => {
+        this.bestSellersSubject$.next(products);
+        this.isLoadingBestSellers = false;
+      });
+    }
+
+    // Return the shared observable - all subscribers share the same Firestore listener
+    return this.bestSellersSubject$.asObservable().pipe(
+      filter(products => products.length > 0 || !this.isLoadingBestSellers)
     );
   }
 
