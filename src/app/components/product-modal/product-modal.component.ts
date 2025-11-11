@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Product, ProductVariant } from '../../models/product';
+import { Product, ProductVariant, ProductStatus } from '../../models/product';
 import { CartService } from '../../services/cart.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -86,8 +86,40 @@ export class ProductModalComponent {
 
   canAddToCart(): boolean {
     if (!this.product) return false;
-    // If product has variants, a variant must be selected
-    if (this.hasVariants() && !this.selectedVariant) return false;
+
+    // Check if product is available
+    if (!this.isProductAvailable()) return false;
+
+    // If product has variants, a variant must be selected and available
+    if (this.hasVariants()) {
+      if (!this.selectedVariant) return false;
+      if (!this.isVariantAvailable(this.selectedVariant)) return false;
+    }
+
     return true;
+  }
+
+  isProductAvailable(): boolean {
+    const status = this.product?.status || 'available';
+    return status === 'available';
+  }
+
+  isVariantAvailable(variant: ProductVariant): boolean {
+    const status = variant.status || 'available';
+    return status === 'available';
+  }
+
+  getProductStatusLabel(): string {
+    const status = this.product?.status || 'available';
+    if (status === 'sold-out') return 'Sold Out';
+    if (status === 'unavailable') return 'Unavailable';
+    return '';
+  }
+
+  getVariantStatusLabel(variant: ProductVariant): string {
+    const status = variant.status || 'available';
+    if (status === 'sold-out') return 'Sold Out';
+    if (status === 'unavailable') return 'Unavailable';
+    return '';
   }
 }

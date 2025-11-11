@@ -1,0 +1,78 @@
+<div class="drawer lg:drawer-open">
+  <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <!-- Mobile Header -->
+    <div class="w-full navbar bg-base-300 lg:hidden">
+      <div class="flex-none">
+        <label for="admin-drawer" class="btn btn-square btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </label>
+      </div>
+      <div class="flex-1 px-2 mx-2">Admin Dashboard</div>
+      <div class="flex-none">
+        <button (click)="logout()" class="btn btn-sm btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="flex-1 overflow-y-auto">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="drawer-side">
+    <label for="admin-drawer" class="drawer-overlay"></label>
+    <aside class="bg-base-200 w-64 min-h-full flex flex-col">
+      <!-- Logo/Header -->
+      <div class="p-4 bg-base-300">
+        <h2 class="text-xl font-bold">Admin Panel</h2>
+        <p class="text-sm text-base-content/70">Pasta & Pastries</p>
+      </div>
+
+      <!-- Navigation Menu -->
+      <ul class="menu p-4 flex-1">
+        <li>
+          <a
+            (click)="setActiveTab('orders')"
+            [class.active]="activeTab === 'orders'"
+            class="flex items-center gap-3"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Order Tracking
+          </a>
+        </li>
+        <li>
+          <a
+            (click)="setActiveTab('products')"
+            [class.active]="activeTab === 'products'"
+            class="flex items-center gap-3"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+            Products
+          </a>
+        </li>
+      </ul>
+
+      <!-- Logout button (Desktop) -->
+      <div class="p-4 border-t border-base-300 hidden lg:block">
+        <button (click)="logout()" class="btn btn-outline btn-sm w-full gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Logout
+        </button>
+      </div>
+    </aside>
+  </div>
+</div>

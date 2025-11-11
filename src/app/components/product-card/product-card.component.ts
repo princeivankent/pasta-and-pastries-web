@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '../../models/product';
+import { Product, ProductStatus } from '../../models/product';
 import { CommonModule } from '@angular/common';
 import { ProductModalComponent } from '../product-modal/product-modal.component';
 
@@ -38,5 +38,27 @@ export class ProductCardComponent {
       return this.product.price;
     }
     return Math.max(...this.product.variants!.map(v => v.price));
+  }
+
+  isAvailable(): boolean {
+    const status = this.product.status || 'available';
+    return status === 'available';
+  }
+
+  isSoldOut(): boolean {
+    const status = this.product.status || 'available';
+    return status === 'sold-out';
+  }
+
+  isUnavailable(): boolean {
+    const status = this.product.status || 'available';
+    return status === 'unavailable';
+  }
+
+  getStatusLabel(): string {
+    const status = this.product.status || 'available';
+    if (status === 'sold-out') return 'Sold Out';
+    if (status === 'unavailable') return 'Unavailable';
+    return '';
   }
 }

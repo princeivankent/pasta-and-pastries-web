@@ -1,9 +1,9 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Firestore, collection, collectionData, doc, docData, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, docData, query, where, updateDoc } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, catchError, take } from 'rxjs/operators';
-import { Product } from '../models/product';
+import { Product, ProductStatus } from '../models/product';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -105,6 +105,25 @@ export class ProductsService {
   }
 
   /**
+   * Get all products with real-time updates (for admin)
+   */
+  getAllProductsRealtime(): Observable<Product[]> {
+    // Use mock data during SSR or when explicitly configured
+    if (!this.isBrowser || environment.useMockData) {
+      return of(this.mockProducts);
+    }
+
+    const productsCollection = collection(this.firestore, 'products');
+    return collectionData(productsCollection, { idField: 'id' }).pipe(
+      map(products => products as Product[]),
+      catchError(error => {
+        console.error('Error fetching products from Firestore:', error);
+        return of(this.mockProducts);
+      })
+    );
+  }
+
+  /**
    * Get best seller products
    */
   getBestSellers(): Observable<Product[]> {
@@ -166,5 +185,53 @@ export class ProductsService {
         return of(this.mockProducts.find(p => p.id === id));
       })
     );
+  }
+
+  /**
+   * Update product status (admin only)
+   */
+  async updateProductStatus(productId: string, status: ProductStatus): Promise<void> {
+    if (!this.isBrowser || environment.useMockData) {
+      console.log('Mock mode: Product status update skipped');
+      return;
+    }
+
+    try {
+      const productDoc = doc(this.firestore, `products/${productId}`);
+      await updateDoc(productDoc, { status });
+      console.log(`Product ${productId} status updated to ${status}`);
+    } catch (error) {
+      console.error('Error updating product status:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update variant status (admin only)
+   */
+  async updateVariantStatus(productId: string, variantId: string, status: ProductStatus): Promise<void> {
+    if (!this.isBrowser || environment.useMockData) {
+      console.log('Mock mode: Variant status update skipped');
+      return;
+    }
+
+    try {
+      // First, get the product to update the specific variant
+      const productDoc = doc(this.firestore, `products/${productId}`);
+      const productData = await docData(productDoc, { idField: 'id' }).pipe(take(1)).toPromise();
+
+      if (productData && (productData as Product).variants) {
+        const product = productData as Product;
+        const updatedVariants = product.variants!.map(v =>
+          v.id === variantId ? { ...v, status } : v
+        );
+
+        await updateDoc(productDoc, { variants: updatedVariants });
+        console.log(`Variant ${variantId} of product ${productId} status updated to ${status}`);
+      }
+    } catch (error) {
+      console.error('Error updating variant status:', error);
+      throw error;
+    }
   }
 }
