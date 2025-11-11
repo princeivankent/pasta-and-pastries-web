@@ -124,7 +124,7 @@ export class ProductsService {
   }
 
   /**
-   * Get best seller products
+   * Get best seller products (one-time fetch)
    */
   getBestSellers(): Observable<Product[]> {
     // Use mock data during SSR or when explicitly configured
@@ -137,6 +137,27 @@ export class ProductsService {
 
     return collectionData(bestSellersQuery, { idField: 'id' }).pipe(
       take(1), // Complete after first emission to prevent continuous listening
+      map(products => products as Product[]),
+      catchError(error => {
+        console.error('Error fetching best sellers from Firestore:', error);
+        return of(this.mockProducts.filter(p => p.isBestSeller));
+      })
+    );
+  }
+
+  /**
+   * Get best seller products with real-time updates
+   */
+  getBestSellersRealtime(): Observable<Product[]> {
+    // Use mock data during SSR or when explicitly configured
+    if (!this.isBrowser || environment.useMockData) {
+      return of(this.mockProducts.filter(p => p.isBestSeller));
+    }
+
+    const productsCollection = collection(this.firestore, 'products');
+    const bestSellersQuery = query(productsCollection, where('isBestSeller', '==', true));
+
+    return collectionData(bestSellersQuery, { idField: 'id' }).pipe(
       map(products => products as Product[]),
       catchError(error => {
         console.error('Error fetching best sellers from Firestore:', error);
