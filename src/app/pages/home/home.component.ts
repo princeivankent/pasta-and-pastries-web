@@ -7,7 +7,7 @@ import { TestimonialsService } from '../../services/testimonials.service';
 import { SeoService } from '../../services/seo.service';
 import { Product } from '../../models/product';
 import { Testimonial } from '../../models/testimonial';
-import { timeout, catchError, of } from 'rxjs';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedImageUrl: string = '';
   selectedImageName: string = '';
   isLoadingProducts: boolean = true;
+  private hasLoadedOnce: boolean = false;
 
   // Swipe/Drag functionality
   isDragging: boolean = false;
@@ -58,23 +59,29 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Load testimonials (synchronous, no Firestore dependency)
     this.testimonials = this.testimonialsService.getAllTestimonials();
 
-    // Subscribe to real-time best sellers updates with timeout to prevent infinite loading
+    // Subscribe to real-time best sellers updates (no timeout for continuous stream)
     this.productsSubscription = this.productsService.getBestSellersRealtime()
       .pipe(
-        timeout(10000), // 10 second timeout for initial load
         catchError((error) => {
           console.error('Error loading best sellers:', error);
-          return of([]); // Return empty array on error
+          // Don't clear products on error - keep existing data
+          this.isLoadingProducts = false;
+          this.hasLoadedOnce = true;
+          return of([]); // Return empty array only on initial error
         })
       )
       .subscribe({
         next: (products) => {
           this.bestSellers = products;
           this.isLoadingProducts = false;
+          this.hasLoadedOnce = true;
         },
         error: (error) => {
-          console.error('Error loading best sellers:', error);
-          this.bestSellers = [];
+          // Only clear products if we haven't loaded any yet
+          console.error('Error in best sellers subscription:', error);
+          if (!this.hasLoadedOnce) {
+            this.bestSellers = [];
+          }
           this.isLoadingProducts = false;
         }
       });

@@ -17,6 +17,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   filteredProducts: Product[] = [];
   selectedCategory: 'all' | 'pasta' | 'pastry' = 'all';
   private productsSubscription?: Subscription;
+  private hasLoadedOnce: boolean = false;
 
   constructor(
     private productsService: ProductsService,
@@ -38,13 +39,18 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.productsSubscription = this.productsService.getAllProductsRealtime().subscribe({
       next: (products) => {
         this.allProducts = products;
+        this.hasLoadedOnce = true;
         // Re-apply filter when products update
         this.filterByCategory(this.selectedCategory);
       },
       error: (error) => {
         console.error('Error loading products:', error);
-        this.allProducts = [];
-        this.filteredProducts = [];
+        // Only clear products if we haven't loaded any yet
+        // This prevents products from disappearing due to temporary network issues
+        if (!this.hasLoadedOnce) {
+          this.allProducts = [];
+          this.filteredProducts = [];
+        }
       }
     });
   }
