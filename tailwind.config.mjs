@@ -1,51 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+import daisyui from "daisyui"
+
+export default {
     content: [
         "./src/**/*.{html,ts}",
-    ],
-    safelist: [
-        // DaisyUI button classes
-        'btn',
-        'btn-primary',
-        'btn-secondary',
-        'btn-accent',
-        'btn-ghost',
-        'btn-outline',
-        'btn-info',
-        'btn-success',
-        'btn-warning',
-        'btn-error',
-        'btn-sm',
-        'btn-md',
-        'btn-lg',
-        'btn-circle',
-        // DaisyUI badge classes
-        'badge',
-        'badge-primary',
-        'badge-secondary',
-        'badge-accent',
-        'badge-ghost',
-        'badge-outline',
-        'badge-info',
-        'badge-success',
-        'badge-warning',
-        'badge-error',
-        'badge-neutral',
-        'badge-sm',
-        'badge-md',
-        'badge-lg',
-        // DaisyUI alert classes
-        'alert',
-        'alert-info',
-        'alert-success',
-        'alert-warning',
-        'alert-error',
-        // DaisyUI toast classes
-        'toast',
-        'toast-top',
-        'toast-bottom',
-        'toast-start',
-        'toast-end',
     ],
     theme: {
         extend: {
@@ -93,6 +51,7 @@ module.exports = {
         base: true,
         styled: true,
         utils: true,
+        logs: false,
     },
-    plugins: [require("daisyui")],
+    plugins: [daisyui],
 }
