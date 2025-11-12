@@ -1,8 +1,17 @@
 <!-- Page Header Section -->
-<div class="bg-light-beige py-20">
-  <div class="container mx-auto px-4">
-    <div class="text-center max-w-4xl mx-auto">
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 text-neutral">My Orders</h1>
+<div class="relative bg-gradient-to-br from-light-beige via-warm-cream to-light-beige py-24 overflow-hidden">
+  <!-- Decorative background elements -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-olive-green/5 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-sage-green/5 rounded-full blur-3xl"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="text-center max-w-4xl mx-auto animate-fade-in">
+      <div class="inline-block mb-6 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-olive-green/20 shadow-soft">
+        <span class="text-sm font-semibold text-olive-green">📦 Order History</span>
+      </div>
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-heading font-bold mb-6 text-neutral">
+        My <span class="text-gradient">Orders</span>
+      </h1>
       <p class="text-xl md:text-2xl text-base-content/70 font-body leading-relaxed">
         Track your orders and view order history
       </p>
@@ -11,32 +20,37 @@
 </div>
 
 <!-- Orders Content Section -->
-<div class="bg-base-100 py-20">
+<div class="bg-gradient-to-b from-base-100 to-light-beige py-24">
   <div class="container mx-auto px-4 max-w-6xl">
 
     <!-- Not Signed In State -->
-    <div *ngIf="!(currentUser$ | async)" class="card bg-base-200 shadow-xl">
+    <div *ngIf="!(currentUser$ | async)" class="card-lift card bg-white shadow-soft hover:shadow-lifted border border-neutral/5 rounded-3xl animate-fade-in">
       <div class="card-body text-center py-16 px-8">
-        <div class="mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
+        <div class="mb-8 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-32 bg-olive-green/10 rounded-full blur-2xl"></div>
+          </div>
+          <div class="relative w-24 h-24 mx-auto bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-3xl flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
         </div>
-        <h2 class="text-3xl font-heading font-bold mb-3 text-neutral">Sign In Required</h2>
-        <p class="text-lg text-base-content/70 font-body mb-8">Please sign in to view your order history</p>
+        <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4 text-neutral">Sign In Required</h2>
+        <p class="text-lg md:text-xl text-base-content/70 font-body mb-10 max-w-md mx-auto">Please sign in to view your order history</p>
         <div>
           <button
             (click)="signInWithGoogle()"
-            class="inline-flex items-center gap-3 px-6 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md hover:border-gray-400 transition-all duration-200 group"
+            class="btn-modern inline-flex items-center gap-3 px-8 py-4 bg-white border-2 border-gray-300 rounded-2xl shadow-soft hover:shadow-lifted hover:border-olive-green transition-all duration-300 group"
             aria-label="Sign in with Google"
           >
-            <svg class="h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="h-5 w-5 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            <span class="text-gray-700 font-medium group-hover:text-gray-900">Sign in with Google</span>
+            <span class="text-gray-700 font-semibold group-hover:text-olive-green transition-colors duration-300">Sign in with Google</span>
           </button>
         </div>
       </div>
@@ -48,102 +62,136 @@
     </div>
 
     <!-- Error State -->
-    <div *ngIf="(currentUser$ | async) && !isLoading && errorMessage" class="alert alert-error shadow-lg">
-      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <span>{{ errorMessage }}</span>
+    <div *ngIf="(currentUser$ | async) && !isLoading && errorMessage" class="card bg-red-50 border-2 border-red-200 shadow-soft rounded-3xl animate-fade-in">
+      <div class="card-body p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <span class="text-red-800 font-body font-semibold">{{ errorMessage }}</span>
+        </div>
+      </div>
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="(currentUser$ | async) && !isLoading && !errorMessage && orders.length === 0" class="card bg-base-200 shadow-xl">
+    <div *ngIf="(currentUser$ | async) && !isLoading && !errorMessage && orders.length === 0" class="card-lift card bg-white shadow-soft hover:shadow-lifted border border-neutral/5 rounded-3xl animate-fade-in">
       <div class="card-body text-center py-16 px-8">
-        <div class="mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
+        <div class="mb-8 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-32 bg-olive-green/10 rounded-full blur-2xl"></div>
+          </div>
+          <div class="relative w-24 h-24 mx-auto bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-3xl flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
         </div>
-        <h2 class="text-3xl font-heading font-bold mb-3 text-neutral">No Orders Yet</h2>
-        <p class="text-lg text-base-content/70 font-body mb-8">You haven't placed any orders yet. Start exploring our menu!</p>
+        <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4 text-neutral">No Orders Yet</h2>
+        <p class="text-lg md:text-xl text-base-content/70 font-body mb-10 max-w-md mx-auto">You haven't placed any orders yet. Start exploring our menu!</p>
         <div>
-          <a routerLink="/menu" class="btn bg-olive-green text-white hover:bg-olive-green/90 border-none btn-lg px-8 py-4 rounded-xl shadow-lg">Browse Menu</a>
+          <a routerLink="/menu" class="btn-modern btn bg-olive-green hover:bg-olive-green/90 text-white border-none btn-lg px-10 py-4 rounded-2xl shadow-soft hover-glow group">
+            <span class="group-hover:scale-110 inline-block transition-transform duration-300">Browse Menu</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
 
     <!-- Orders List -->
-    <div *ngIf="(currentUser$ | async) && !isLoading && !errorMessage && orders.length > 0" class="space-y-6">
-      <div *ngFor="let order of orders" class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
-        <div class="card-body p-8">
+    <div *ngIf="(currentUser$ | async) && !isLoading && !errorMessage && orders.length > 0" class="space-y-6 animate-fade-in">
+      <div *ngFor="let order of orders" class="card-lift card bg-white shadow-soft hover:shadow-lifted border border-neutral/5 rounded-3xl transition-all duration-300">
+        <div class="card-body p-6 md:p-8">
           <!-- Order Header -->
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 pb-4 border-b border-base-300">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-6 border-b border-neutral/10">
             <div>
-              <div class="flex items-center gap-2 mb-1">
-                <h2 class="text-xl font-heading font-bold text-neutral">Order #{{ order.id }}</h2>
-                <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-xl flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <h2 class="text-xl md:text-2xl font-heading font-bold text-neutral">Order #{{ order.id }}</h2>
+                <span class="badge badge-lg" [ngClass]="getStatusBadgeClass(order.status)">
                   {{ getStatusLabel(order.status) }}
                 </span>
               </div>
-              <p class="text-sm text-base-content/70">{{ formatDate(order.orderDate) }}</p>
+              <p class="text-sm md:text-base text-base-content/70 font-body ml-13">{{ formatDate(order.orderDate) }}</p>
             </div>
-            <div>
-              <div class="flex flex-row justify-end">
-                <table>
-                  <tr>
-                    <td class="pr-1 text-right"><p class="text-sm text-base-content/70">Total:</p></td>
-                    <td class="pl-1 text-left"><span class="text-xl font-bold text-olive-green">{{ formatCurrency(order.totalAmount) }}</span></td>
-                  </tr>
-                  <tr>
-                    <td class="pr-1 text-right"></td>
-                    <td class="pl-1 text-right"><span class="font-semibold capitalize">{{ order.orderType }}</span></td>
-                  </tr>
-                </table>
-              </div>
+            <div class="bg-gradient-to-br from-olive-green/5 to-sage-green/5 rounded-2xl p-4 border border-olive-green/10">
+              <p class="text-sm text-base-content/70 mb-1">Total Amount</p>
+              <p class="text-2xl md:text-3xl font-bold text-gradient mb-1">{{ formatCurrency(order.totalAmount) }}</p>
+              <p class="text-sm font-semibold text-olive-green capitalize">{{ order.orderType }}</p>
             </div>
           </div>
 
           <!-- Order Items -->
-          <div class="space-y-3">
-            <h3 class="font-semibold text-base-content/80">Items:</h3>
-            <div *ngFor="let item of order.items" class="flex items-start gap-4 p-3 bg-base-200 rounded-lg">
-              <img
-                [src]="item.product.image"
-                [alt]="item.product.name"
-                class="w-16 h-16 object-cover rounded-lg"
-              />
-              <div class="flex-1">
-                <h4 class="font-semibold">{{ item.product.name }}</h4>
-                <p *ngIf="item.selectedVariant" class="text-sm text-base-content/70">
-                  Variant: {{ item.selectedVariant.label }}
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h3 class="font-heading font-bold text-lg text-neutral">Order Items</h3>
+            </div>
+            <div *ngFor="let item of order.items" class="flex items-start gap-4 p-4 bg-gradient-to-br from-base-100 to-base-200 rounded-2xl border border-neutral/10 hover:border-olive-green/20 transition-all duration-300">
+              <div class="relative w-20 h-20 flex-shrink-0">
+                <img
+                  [src]="item.product.image"
+                  [alt]="item.product.name"
+                  class="w-full h-full object-cover rounded-xl border-2 border-white shadow-soft"
+                />
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="font-heading font-bold text-base md:text-lg text-neutral mb-1">{{ item.product.name }}</h4>
+                <p *ngIf="item.selectedVariant" class="text-sm text-base-content/70 mb-1">
+                  <span class="font-semibold text-olive-green">Variant:</span> {{ item.selectedVariant.label }}
                 </p>
-                <p *ngIf="item.specialInstructions" class="text-sm text-base-content/70 text-slate-500 italic">
-                  Note: {{ item.specialInstructions }}
+                <p *ngIf="item.specialInstructions" class="text-sm text-base-content/70 italic bg-amber-50 px-2 py-1 rounded-lg mb-2 border border-amber-200">
+                  <span class="font-semibold text-amber-700">Note:</span> {{ item.specialInstructions }}
                 </p>
-                <div class="flex items-center gap-2 mt-1">
-                  <span class="text-sm text-base-content/70">Qty: {{ item.quantity }}</span>
-                  <span class="text-sm">×</span>
-                  <span class="text-sm font-semibold">{{ formatCurrency(getItemPrice(item)) }}</span>
+                <div class="flex items-center gap-3 font-body">
+                  <span class="text-sm text-base-content/70">Qty: <span class="font-semibold text-neutral">{{ item.quantity }}</span></span>
+                  <span class="text-sm text-base-content/50">×</span>
+                  <span class="text-sm font-semibold text-olive-green">{{ formatCurrency(getItemPrice(item)) }}</span>
                 </div>
               </div>
-              <div class="text-right">
-                <p class="font-semibold">{{ formatCurrency(getItemPrice(item) * item.quantity) }}</p>
+              <div class="text-right flex-shrink-0">
+                <p class="text-lg md:text-xl font-bold text-gradient">{{ formatCurrency(getItemPrice(item) * item.quantity) }}</p>
               </div>
             </div>
           </div>
 
           <!-- Special Instructions -->
-          <div *ngIf="order.specialInstructions" class="mt-4 pt-4 border-t border-base-300">
-            <h3 class="font-semibold text-base-content/80 mb-2">Special Instructions:</h3>
-            <p class="text-sm italic text-base-content/70">{{ order.specialInstructions }}</p>
+          <div *ngIf="order.specialInstructions" class="mt-6 pt-6 border-t border-neutral/10">
+            <div class="flex items-start gap-3 p-4 bg-amber-50 rounded-2xl border border-amber-200">
+              <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-heading font-bold text-base text-amber-900 mb-1">Special Instructions</h3>
+                <p class="text-sm text-amber-800 font-body">{{ order.specialInstructions }}</p>
+              </div>
+            </div>
           </div>
 
-          <div class="mt-2 pt-2 border-t border-base-300 w-full" *ngIf="canCancelOrder(order.status)">
+          <!-- Cancel Order Button -->
+          <div class="mt-6 pt-6 border-t border-neutral/10 flex justify-end" *ngIf="canCancelOrder(order.status)">
             <button
               (click)="cancelOrder(order.id)"
-              class="btn bg-error btn-sm px-4 text-white float-right"
+              class="btn-modern btn bg-red-500 hover:bg-red-600 text-white border-none px-6 py-3 rounded-xl shadow-soft hover:shadow-lifted transition-all duration-300 group"
               aria-label="Cancel order"
             >
-              Cancel Order
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              <span class="font-semibold">Cancel Order</span>
             </button>
           </div>
         </div>
