@@ -368,7 +368,7 @@
 
 <!-- Checkout Confirmation Modal -->
 <div *ngIf="isCheckoutModalOpen" class="modal modal-open">
-  <div class="modal-box">
+  <div class="modal-box max-w-md">
     <h3 class="font-heading font-bold text-xl text-base-content mb-4">Confirm Checkout</h3>
     <div class="space-y-3 mb-6">
       <p class="text-base-content/70">
@@ -383,6 +383,17 @@
       <p class="text-sm text-base-content/60">
         Your order will be delivered to your saved address.
       </p>
+
+      <!-- Delivery Notice -->
+      <div class="alert alert-warning shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div class="text-sm">
+          <p class="font-semibold mb-1">Important Delivery Information</p>
+          <p>Reminder: Orders outside <strong>Tanauan</strong> require 1-day advance notice. Delivery fees may vary by location.</p>
+        </div>
+      </div>
     </div>
     <div class="modal-action">
       <button
