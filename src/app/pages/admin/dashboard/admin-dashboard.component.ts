@@ -23,6 +23,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   private ordersSubscription?: Subscription;
   private previousOrderCount: number = 0;
+  private isApplyingFilter: boolean = false; // Flag to prevent false notifications
 
   // Date filtering properties
   dateFilterType: 'today' | 'range' = 'today';
@@ -57,8 +58,18 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
     // Subscribe to orders observable
     this.ordersSubscription = this.adminService.orders$.subscribe(orders => {
-      // Check for new orders
-      if (this.previousOrderCount > 0 && orders.length > this.previousOrderCount) {
+      // Only show notifications for truly new orders (not when filters change)
+      // Notifications should only appear when:
+      // 1. We're in "today" mode (monitoring current orders)
+      // 2. Not actively applying a filter
+      // 3. Order count increased
+      const shouldNotify =
+        !this.isApplyingFilter &&
+        this.dateFilterType === 'today' &&
+        this.previousOrderCount > 0 &&
+        orders.length > this.previousOrderCount;
+
+      if (shouldNotify) {
         const newOrdersCount = orders.length - this.previousOrderCount;
 
         // Show toast notification
@@ -78,6 +89,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this.orders = orders;
       this.filterOrders();
       this.isLoading = false;
+
+      // Reset the flag after processing
+      this.isApplyingFilter = false;
     });
   }
 
@@ -233,8 +247,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       endDateTime.setHours(23, 59, 59, 999);
     }
 
-    // Restart listener with new date range
+    // Set flag to prevent false notifications when filter changes
+    this.isApplyingFilter = true;
     this.isLoading = true;
+
+    // Restart listener with new date range
     this.adminService.startRealtimeListener(startDateTime, endDateTime);
   }
 
