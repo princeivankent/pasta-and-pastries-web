@@ -259,12 +259,12 @@
   <!-- Cart Dropdown Menu -->
   <div
     *ngIf="isCartOpen"
-    class="fixed inset-0 z-[60]"
+    class="fixed inset-0 z-[60] bg-black/20"
     (click)="closeCart()"
   >
-    <div class="absolute right-0 top-0 h-full w-full md:w-96 bg-base-100 shadow-2xl flex flex-col" (click)="$event.stopPropagation()">
+    <div class="fixed right-0 top-0 h-screen w-full md:w-96 bg-base-100 shadow-2xl flex flex-col" (click)="$event.stopPropagation()">
       <!-- Cart Header -->
-      <div class="p-4 border-b border-neutral/10 flex items-center justify-between bg-gradient-to-r from-olive-green/10 to-sage-green/10">
+      <div class="flex-none p-4 border-b border-neutral/10 flex items-center justify-between bg-gradient-to-r from-olive-green/10 to-sage-green/10">
         <h3 class="text-xl font-heading font-bold text-neutral flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -275,7 +275,7 @@
       </div>
 
       <!-- Cart Items -->
-      <div class="flex-1 overflow-y-auto p-4 bg-base-100">
+      <div class="flex-1 overflow-y-auto p-4 bg-base-100 min-h-0">
         <div *ngIf="cartItems.length === 0" class="text-center py-12">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-base-content/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -312,7 +312,7 @@
       </div>
 
       <!-- Cart Footer -->
-      <div *ngIf="cartItems.length > 0" class="border-t border-neutral/10 p-4 bg-white space-y-3 shadow-lifted">
+      <div *ngIf="cartItems.length > 0" class="flex-none border-t border-neutral/10 p-4 bg-white space-y-3 shadow-lifted">
         <!-- Sign in prompt if not authenticated -->
         <div *ngIf="!currentUser" class="alert alert-info text-sm py-2 px-3 rounded-xl">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-5 h-5">
