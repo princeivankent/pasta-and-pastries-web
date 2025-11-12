@@ -1,10 +1,10 @@
-<header class="w-full bg-base-100 border-b border-neutral/10">
+<header class="sticky top-0 w-full glass-effect backdrop-blur-lg border-b border-white/20 shadow-soft z-50 transition-all duration-300">
   <div class="container mx-auto px-4 md:px-6">
     <div class="flex items-center justify-between py-4 md:py-5">
       <!-- Brand -->
-      <a routerLink="/" class="text-2xl md:text-3xl font-heading font-bold tracking-tight text-neutral">
+      <a routerLink="/" class="group text-2xl md:text-3xl font-heading font-bold tracking-tight text-neutral transition-all duration-300 hover:scale-105">
         Pasta & Pastries
-        <span class="text-base font-body italic text-olive-green">by Cha</span>
+        <span class="text-base font-body italic text-gradient group-hover:opacity-80 transition-opacity duration-300">by Cha</span>
       </a>
 
       <!-- Mobile Menu Button -->
@@ -37,42 +37,47 @@
       </button>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden lg:flex items-center gap-8">
+      <nav class="hidden lg:flex items-center gap-6">
         <a
           routerLink="/"
-          routerLinkActive="font-semibold"
+          routerLinkActive="font-semibold text-olive-green"
           [routerLinkActiveOptions]="{exact: true}"
-          class="text-base text-neutral hover:text-olive-green transition-colors"
+          class="relative text-base text-neutral hover:text-olive-green transition-all duration-300 px-3 py-2 rounded-lg hover:bg-olive-green/5 group"
         >
-          Home
+          <span>Home</span>
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-olive-green group-hover:w-full transition-all duration-300"></span>
         </a>
         <a
           routerLink="/menu"
-          routerLinkActive="font-semibold"
-          class="text-base text-neutral hover:text-olive-green transition-colors"
+          routerLinkActive="font-semibold text-olive-green"
+          class="relative text-base text-neutral hover:text-olive-green transition-all duration-300 px-3 py-2 rounded-lg hover:bg-olive-green/5 group"
         >
-          Menu
+          <span>Menu</span>
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-olive-green group-hover:w-full transition-all duration-300"></span>
         </a>
         <a
           routerLink="/about"
-          routerLinkActive="font-semibold"
-          class="text-base text-neutral hover:text-olive-green transition-colors"
+          routerLinkActive="font-semibold text-olive-green"
+          class="relative text-base text-neutral hover:text-olive-green transition-all duration-300 px-3 py-2 rounded-lg hover:bg-olive-green/5 group"
         >
-          About
+          <span>About</span>
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-olive-green group-hover:w-full transition-all duration-300"></span>
         </a>
         <a
           routerLink="/contact"
-          routerLinkActive="font-semibold"
-          class="text-base text-neutral hover:text-olive-green transition-colors"
+          routerLinkActive="font-semibold text-olive-green"
+          class="relative text-base text-neutral hover:text-olive-green transition-all duration-300 px-3 py-2 rounded-lg hover:bg-olive-green/5 group"
         >
-          Contact
+          <span>Contact</span>
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-olive-green group-hover:w-full transition-all duration-300"></span>
         </a>
         <a
           routerLink="/orders"
-          routerLinkActive="font-semibold"
-          class="text-base text-neutral hover:text-olive-green transition-colors"
+          routerLinkActive="font-semibold text-olive-green"
+          class="relative text-base text-neutral hover:text-olive-green transition-all duration-300 px-3 py-2 rounded-lg hover:bg-olive-green/5 group"
         >
-          Orders
+          <span>Orders</span>
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-olive-green group-hover:w-full transition-all duration-300"></span>
         </a>
 
         <!-- User Menu -->
@@ -80,7 +85,7 @@
           <button
             *ngIf="!currentUser"
             (click)="signIn()"
-            class="flex items-center gap-3 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md hover:border-gray-400 transition-all duration-200 group"
+            class="btn-modern flex items-center gap-3 px-4 py-2 bg-white border border-gray-300 rounded-xl shadow-soft hover:shadow-lifted hover:border-olive-green transition-all duration-300 group"
             aria-label="Sign in with Google"
           >
             <svg class="h-5 w-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -128,15 +133,15 @@
         <div class="relative">
           <button
             (click)="toggleCart()"
-            class="btn bg-transparent hover:bg-gray-100 btn-circle relative"
+            class="btn bg-white/50 hover:bg-olive-green hover:text-white border border-olive-green/20 hover:border-olive-green btn-circle relative transition-all duration-300 shadow-soft hover:shadow-glow group"
             aria-label="Shopping cart"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             <span
               *ngIf="cartCount > 0"
-              class="badge badge-sm badge-error absolute -top-1 -right-1 transition-all"
+              class="badge badge-sm bg-olive-green text-white border-none absolute -top-1 -right-1 transition-all shadow-soft"
               [class.animate-ping]="cartBadgePulse"
               [class.scale-125]="cartBadgePulse"
             >{{ cartCount }}</span>
