@@ -1,37 +1,53 @@
-<div class="card bg-base-100 shadow-md hover:shadow-xl transition-all duration-300 border-2 border-neutral/10 hover:border-olive-green/30 rounded-3xl overflow-hidden cursor-pointer group h-full flex flex-col relative"
+<div class="card-lift card bg-white shadow-soft hover:shadow-lifted transition-all duration-500 border border-neutral/5 hover:border-olive-green/30 rounded-3xl overflow-hidden cursor-pointer group h-full flex flex-col relative"
      [class.opacity-75]="!isAvailable()"
      [class.grayscale]="isUnavailable()"
      (click)="openModal()">
+  <!-- Decorative gradient overlay on hover -->
+  <div class="absolute inset-0 bg-gradient-to-br from-olive-green/0 to-sage-green/0 group-hover:from-olive-green/5 group-hover:to-sage-green/5 transition-all duration-500 pointer-events-none rounded-3xl z-0"></div>
+
   <!-- Best Seller Badge -->
-  <div *ngIf="showBestSellerBadge && isAvailable()" class="absolute top-4 right-4 z-10 bg-olive-green text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+  <div *ngIf="showBestSellerBadge && isAvailable()" class="absolute top-4 right-4 z-20 bg-gradient-to-r from-olive-green to-sage-green text-white px-4 py-2 rounded-full text-sm font-bold shadow-soft hover:shadow-glow transition-all duration-300 animate-fade-in">
     ⭐ Best Seller
   </div>
 
   <!-- Status Badge -->
-  <div *ngIf="!isAvailable()" class="absolute top-4 right-4 z-10 px-4 py-2 rounded-full text-sm font-bold shadow-lg text-white"
+  <div *ngIf="!isAvailable()" class="absolute top-4 right-4 z-20 px-4 py-2 rounded-full text-sm font-bold shadow-soft text-white"
        [class.bg-amber-500]="isSoldOut()"
        [class.bg-red-500]="isUnavailable()">
     {{ getStatusLabel() }}
   </div>
 
   <figure class="px-8 pt-8 flex-shrink-0 relative">
-    <div class="w-full aspect-square flex items-center justify-center bg-base-200 rounded-3xl border-2 border-neutral/5 overflow-hidden">
+    <div class="relative w-full aspect-square flex items-center justify-center bg-gradient-to-br from-base-200 to-base-300 rounded-3xl border border-neutral/5 overflow-hidden group-hover:border-olive-green/20 transition-all duration-500">
+      <!-- Glow effect on hover -->
+      <div class="absolute inset-0 bg-gradient-to-t from-olive-green/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
       <img
         [src]="product.image"
         [alt]="product.name"
-        class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-2"
+        class="relative z-10 w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-2"
         [class.opacity-60]="!isAvailable()"
       />
     </div>
   </figure>
-  <div class="card-body items-center text-center px-6 py-8 flex-grow flex flex-col justify-between">
+
+  <div class="card-body items-center text-center px-6 py-8 flex-grow flex flex-col justify-between relative z-10">
     <div class="flex-grow flex flex-col justify-center">
-      <h3 class="text-2xl font-heading font-bold mb-2 text-neutral line-clamp-2 min-h-[3.5rem]">{{ product.name }}</h3>
-      <p class="text-2xl font-bold mb-3 text-olive-green" *ngIf="!hasVariants() && product.price > 0">₱{{ product.price }}</p>
-      <p class="text-2xl font-bold mb-3 text-olive-green" *ngIf="hasVariants()">₱{{ getMinPrice() }} - ₱{{ getMaxPrice() }}</p>
-      <p class="text-2xl font-bold text-olive-green mb-3" *ngIf="!hasVariants() && product.price === 0">₱00</p>
+      <h3 class="text-2xl font-heading font-bold mb-3 text-neutral line-clamp-2 min-h-[3.5rem] group-hover:text-olive-green transition-colors duration-300">{{ product.name }}</h3>
+
+      <div class="mb-4">
+        <p class="text-2xl font-bold text-gradient" *ngIf="!hasVariants() && product.price > 0">₱{{ product.price }}</p>
+        <p class="text-2xl font-bold text-gradient" *ngIf="hasVariants()">₱{{ getMinPrice() }} - ₱{{ getMaxPrice() }}</p>
+        <p class="text-2xl font-bold text-olive-green" *ngIf="!hasVariants() && product.price === 0">₱00</p>
+      </div>
     </div>
-    <p class="text-base text-slate-500 text-base-content/70 leading-relaxed font-body line-clamp-3">{{ product.description }}</p>
+
+    <p class="text-base text-base-content/70 leading-relaxed font-body line-clamp-3 group-hover:text-base-content/80 transition-colors duration-300">{{ product.description }}</p>
+
+    <!-- Hover indicator -->
+    <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <span class="text-sm text-olive-green font-semibold">View Details →</span>
+    </div>
   </div>
 </div>
 

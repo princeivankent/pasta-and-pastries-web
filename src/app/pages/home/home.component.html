@@ -1,27 +1,51 @@
 <!-- Hero Section -->
-<div class="bg-base-100 py-20 lg:py-24">
-  <div class="container mx-auto px-4">
-    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 max-w-7xl mx-auto">
+<div class="relative bg-gradient-to-br from-warm-cream via-base-100 to-light-beige py-24 lg:py-32 overflow-hidden">
+  <!-- Decorative background elements -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-olive-green/5 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-sage-green/5 rounded-full blur-3xl"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 max-w-7xl mx-auto">
       <!-- Lasagna Illustration - LEFT SIDE -->
-      <div class="w-full lg:w-1/2 flex justify-center items-center order-2 lg:order-1">
-        <div class="w-full max-w-md aspect-square bg-base-200 rounded-3xl shadow-xl flex items-center justify-center border-4 border-neutral/5">
-          <img src="images/lasagna.jpg" alt="Homemade Lasagna" class="w-full h-full object-cover rounded-3xl" />
+      <div class="w-full lg:w-1/2 flex justify-center items-center order-2 lg:order-1 animate-fade-in">
+        <div class="relative w-full max-w-md aspect-square group">
+          <!-- Floating background decoration -->
+          <div class="absolute -inset-4 bg-gradient-to-r from-olive-green/20 to-sage-green/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
+
+          <!-- Main image container -->
+          <div class="relative w-full h-full bg-gradient-to-br from-white to-base-200 rounded-3xl shadow-lifted overflow-hidden border border-white/50 transform transition-all duration-500 group-hover:scale-105 group-hover:shadow-glow">
+            <img src="images/lasagna.jpg" alt="Homemade Lasagna" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+
+            <!-- Overlay gradient for depth -->
+            <div class="absolute inset-0 bg-gradient-to-t from-olive-green/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          </div>
         </div>
       </div>
 
       <!-- Text Content - RIGHT SIDE -->
-      <div class="w-full lg:w-1/2 text-center lg:text-left order-1 lg:order-2">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 leading-tight text-neutral">
-          Homemade Lasagna & Freshly Baked Goodies
+      <div class="w-full lg:w-1/2 text-center lg:text-left order-1 lg:order-2 animate-slide-up">
+        <div class="inline-block mb-4 px-4 py-2 bg-olive-green/10 rounded-full border border-olive-green/20 animate-fade-in">
+          <span class="text-sm font-semibold text-olive-green">✨ Homemade with Love</span>
+        </div>
+
+        <h1 class="text-5xl md:text-6xl lg:text-7xl font-heading font-bold mb-6 leading-tight text-neutral">
+          Homemade Lasagna & Freshly Baked
+          <span class="text-gradient block mt-2">Goodies</span>
         </h1>
-        <p class="text-xl md:text-2xl text-sage-green font-body mb-8 leading-relaxed">
-          Made with Love from Pasta & Pastries by Cha
+
+        <p class="text-xl md:text-2xl text-base-content/70 font-body mb-10 leading-relaxed">
+          Made with Love from <span class="font-semibold text-olive-green">Pasta & Pastries by Cha</span>
         </p>
+
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-          <button (click)="navigateToMenu()" class="btn bg-olive-green hover:bg-olive-green/90 text-white border-none btn-lg text-lg px-10 py-4 rounded-xl shadow-lg">
-            View Menu
+          <button (click)="navigateToMenu()" class="btn-modern btn bg-olive-green hover:bg-olive-green/90 text-white border-none btn-lg text-lg px-12 py-4 rounded-2xl shadow-soft hover-glow group">
+            <span class="group-hover:scale-110 inline-block transition-transform duration-300">View Menu</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
           </button>
-          <button (click)="navigateToAbout()" class="btn btn-outline border-2 border-olive-green text-olive-green hover:bg-olive-green hover:text-white hover:border-olive-green btn-lg text-lg px-10 py-4 rounded-xl">
+
+          <button (click)="navigateToAbout()" class="btn-modern btn btn-outline border-2 border-olive-green text-olive-green hover:bg-olive-green hover:text-white hover:border-olive-green btn-lg text-lg px-12 py-4 rounded-2xl backdrop-blur-sm">
             Learn Our Story
           </button>
         </div>
@@ -30,111 +54,138 @@
   </div>
 </div>
 
-<!-- Value Proposition Section -->
-<div class="bg-light-beige py-20">
+<!-- Value Proposition Section - Modern Bento Grid -->
+<div class="bg-gradient-to-b from-light-beige to-base-100 py-24">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-heading font-bold text-center mb-12 text-neutral">Why Choose Us</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+    <div class="text-center mb-16 animate-fade-in">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-4 text-neutral">Why Choose Us</h2>
+      <p class="text-lg text-base-content/60 font-body max-w-2xl mx-auto">
+        Discover what makes our homemade dishes special
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
       <!-- Fresh Daily -->
-      <div class="text-center">
-        <div class="w-20 h-20 mx-auto mb-4 bg-olive-green/10 rounded-full flex items-center justify-center">
+      <div class="group card-lift bg-white rounded-2xl p-8 shadow-soft hover:shadow-lifted border border-neutral/5 text-center">
+        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 group-hover:shadow-glow">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 class="text-xl font-heading font-bold mb-2 text-neutral">Made Fresh Daily</h3>
-        <p class="text-base text-base-content/70 font-body">Every item is prepared fresh each day with care and attention</p>
+        <h3 class="text-xl font-heading font-bold mb-3 text-neutral">Made Fresh Daily</h3>
+        <p class="text-base text-base-content/70 font-body leading-relaxed">Every item is prepared fresh each day with care and attention</p>
       </div>
 
       <!-- Family Recipe -->
-      <div class="text-center">
-        <div class="w-20 h-20 mx-auto mb-4 bg-olive-green/10 rounded-full flex items-center justify-center">
+      <div class="group card-lift bg-white rounded-2xl p-8 shadow-soft hover:shadow-lifted border border-neutral/5 text-center">
+        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 group-hover:shadow-glow">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </div>
-        <h3 class="text-xl font-heading font-bold mb-2 text-neutral">Family Recipes</h3>
-        <p class="text-base text-base-content/70 font-body">Traditional recipes passed down through generations</p>
+        <h3 class="text-xl font-heading font-bold mb-3 text-neutral">Family Recipes</h3>
+        <p class="text-base text-base-content/70 font-body leading-relaxed">Traditional recipes passed down through generations</p>
       </div>
 
       <!-- Quality Ingredients -->
-      <div class="text-center">
-        <div class="w-20 h-20 mx-auto mb-4 bg-olive-green/10 rounded-full flex items-center justify-center">
+      <div class="group card-lift bg-white rounded-2xl p-8 shadow-soft hover:shadow-lifted border border-neutral/5 text-center">
+        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 group-hover:shadow-glow">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
           </svg>
         </div>
-        <h3 class="text-xl font-heading font-bold mb-2 text-neutral">Premium Ingredients</h3>
-        <p class="text-base text-base-content/70 font-body">Only the finest quality ingredients in every dish</p>
+        <h3 class="text-xl font-heading font-bold mb-3 text-neutral">Premium Ingredients</h3>
+        <p class="text-base text-base-content/70 font-body leading-relaxed">Only the finest quality ingredients in every dish</p>
       </div>
 
       <!-- Custom Orders -->
-      <div class="text-center">
-        <div class="w-20 h-20 mx-auto mb-4 bg-olive-green/10 rounded-full flex items-center justify-center">
+      <div class="group card-lift bg-white rounded-2xl p-8 shadow-soft hover:shadow-lifted border border-neutral/5 text-center">
+        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 group-hover:shadow-glow">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
         </div>
-        <h3 class="text-xl font-heading font-bold mb-2 text-neutral">Custom Orders</h3>
-        <p class="text-base text-base-content/70 font-body">Special requests and custom orders are always welcome</p>
+        <h3 class="text-xl font-heading font-bold mb-3 text-neutral">Custom Orders</h3>
+        <p class="text-base text-base-content/70 font-body leading-relaxed">Special requests and custom orders are always welcome</p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- About Section -->
-<div class="bg-base-100 py-20">
-  <div class="container mx-auto px-4">
+<div class="relative bg-base-100 py-24 overflow-hidden">
+  <!-- Decorative elements -->
+  <div class="absolute top-1/2 left-0 w-64 h-64 bg-sage-green/5 rounded-full blur-3xl"></div>
+  <div class="absolute top-1/2 right-0 w-64 h-64 bg-olive-green/5 rounded-full blur-3xl"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
     <div class="text-center max-w-4xl mx-auto">
-      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-neutral">Our Story</h2>
-      <p class="text-xl text-base-content/80 leading-relaxed font-body mb-6">
-        <b>Pasta & Pastries</b> is a small family-run business dedicated to bringing comfort food to your table.
-        Every dish we serve is <b>freshly baked with love, care, and the finest ingredients</b>, capturing the warmth of home in every bite.
-      </p>
-      <p class="text-lg text-base-content/70 leading-relaxed font-body">
-        Whether it's our signature pasta or our delightful pastries, we believe in sharing simple moments of joy through food made from the heart.
-      </p>
-      <button (click)="navigateToAbout()" class="btn btn-outline border-2 border-olive-green text-olive-green hover:bg-olive-green hover:text-white hover:border-olive-green mt-6 px-8 py-3 rounded-xl">
-        Read Full Story
-      </button>
+      <div class="inline-block mb-6 px-4 py-2 bg-olive-green/10 rounded-full border border-olive-green/20">
+        <span class="text-sm font-semibold text-olive-green">❤️ Our Story</span>
+      </div>
+
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-8 text-neutral">From Our Kitchen to Your Table</h2>
+
+      <div class="bg-white/50 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-soft border border-white/80">
+        <p class="text-xl md:text-2xl text-base-content/80 leading-relaxed font-body mb-6">
+          <span class="font-bold text-olive-green">Pasta & Pastries</span> is a small family-run business dedicated to bringing comfort food to your table.
+          Every dish we serve is <span class="font-semibold">freshly baked with love, care, and the finest ingredients</span>, capturing the warmth of home in every bite.
+        </p>
+        <p class="text-lg md:text-xl text-base-content/70 leading-relaxed font-body mb-8">
+          Whether it's our signature pasta or our delightful pastries, we believe in sharing simple moments of joy through food made from the heart.
+        </p>
+
+        <button (click)="navigateToAbout()" class="btn-modern btn btn-outline border-2 border-olive-green text-olive-green hover:bg-olive-green hover:text-white hover:border-olive-green btn-lg px-10 py-4 rounded-2xl group">
+          <span>Read Full Story</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Best Sellers Section -->
-<div class="bg-light-beige py-20">
+<div class="bg-gradient-to-b from-light-beige via-warm-cream to-light-beige py-24">
   <div class="container mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-3 text-neutral">Best Sellers</h2>
-      <p class="text-lg text-base-content/70 font-body" *ngIf="bestSellers.length > 0">
-        Our {{ bestSellers.length }} most-loved favorites
+    <div class="text-center mb-16 animate-fade-in">
+      <div class="inline-block mb-4 px-4 py-2 bg-olive-green/10 rounded-full border border-olive-green/20">
+        <span class="text-sm font-semibold text-olive-green">⭐ Popular Choices</span>
+      </div>
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 text-neutral">Best Sellers</h2>
+      <p class="text-lg md:text-xl text-base-content/70 font-body" *ngIf="bestSellers.length > 0">
+        Our {{ bestSellers.length }} most-loved favorites crafted with passion
       </p>
     </div>
 
     <!-- Skeleton Loaders -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto" *ngIf="isLoadingProducts">
-      <div *ngFor="let item of [1,2,3,4]" class="card bg-base-100 shadow-md rounded-3xl overflow-hidden h-full flex flex-col">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto" *ngIf="isLoadingProducts">
+      <div *ngFor="let item of [1,2,3,4]" class="card bg-white shadow-soft rounded-3xl overflow-hidden h-full flex flex-col border border-neutral/5">
         <figure class="px-8 pt-8 flex-shrink-0">
           <div class="w-full aspect-square bg-base-200 rounded-3xl animate-pulse"></div>
         </figure>
         <div class="card-body px-6 py-8 flex-grow">
-          <div class="h-8 bg-base-200 rounded animate-pulse mb-3"></div>
-          <div class="h-6 bg-base-200 rounded animate-pulse mb-3 w-24 mx-auto"></div>
-          <div class="h-4 bg-base-200 rounded animate-pulse mb-2"></div>
-          <div class="h-4 bg-base-200 rounded animate-pulse w-3/4 mx-auto"></div>
+          <div class="h-8 bg-base-200 rounded-xl animate-pulse mb-3"></div>
+          <div class="h-6 bg-base-200 rounded-xl animate-pulse mb-3 w-24 mx-auto"></div>
+          <div class="h-4 bg-base-200 rounded-xl animate-pulse mb-2"></div>
+          <div class="h-4 bg-base-200 rounded-xl animate-pulse w-3/4 mx-auto"></div>
         </div>
       </div>
     </div>
 
     <!-- Actual Products -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto" *ngIf="!isLoadingProducts">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto" *ngIf="!isLoadingProducts">
       <app-product-card *ngFor="let product of bestSellers" [product]="product" [showBestSellerBadge]="true" />
     </div>
 
     <!-- View All Menu Button -->
-    <div class="text-center mt-12">
-      <button (click)="navigateToMenu()" class="btn bg-olive-green hover:bg-olive-green/90 text-white border-none btn-lg text-lg px-10 py-4 rounded-xl shadow-lg">
-        View All Menu Items
+    <div class="text-center mt-16">
+      <button (click)="navigateToMenu()" class="btn-modern btn bg-olive-green hover:bg-olive-green/90 text-white border-none btn-lg text-lg px-14 py-4 rounded-2xl shadow-soft hover-glow group">
+        <span class="group-hover:scale-110 inline-block transition-transform duration-300">View All Menu Items</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
       </button>
     </div>
   </div>
@@ -263,51 +314,69 @@
 </div>
 
 <!-- Order CTA Section -->
-<div class="bg-light-beige py-20">
-  <div class="container mx-auto px-4">
+<div class="relative bg-gradient-to-br from-olive-green/10 via-sage-green/5 to-light-beige py-24 overflow-hidden">
+  <!-- Decorative elements -->
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-olive-green/10 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-sage-green/10 rounded-full blur-3xl"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
     <div class="max-w-5xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6 text-neutral">
-        Ready to Order?
+      <div class="inline-block mb-6 px-4 py-2 bg-white rounded-full border border-olive-green/20 shadow-soft">
+        <span class="text-sm font-semibold text-olive-green">🍽️ Ready to Order?</span>
+      </div>
+
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-neutral">
+        Start Your Order Today
       </h2>
-      <p class="text-xl text-base-content/80 font-body mb-8 leading-relaxed">
-        Pickup or Delivery available — start your order now!
+      <p class="text-xl md:text-2xl text-base-content/80 font-body mb-12 leading-relaxed max-w-3xl mx-auto">
+        Pickup or Delivery available — experience homemade goodness delivered to your door
       </p>
 
       <!-- Order Options -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
         <!-- Pickup -->
-        <div class="bg-base-100 rounded-2xl p-6 shadow-md">
-          <div class="w-16 h-16 mx-auto mb-4 bg-olive-green/10 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="group card-lift bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-soft hover:shadow-lifted border border-white">
+          <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 group-hover:shadow-glow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </div>
-          <h3 class="text-xl font-heading font-bold mb-2 text-neutral">Pickup</h3>
-          <p class="text-base text-base-content/70 font-body">Order online and pick up at your convenience</p>
+          <h3 class="text-2xl font-heading font-bold mb-3 text-neutral">Pickup</h3>
+          <p class="text-base text-base-content/70 font-body leading-relaxed">Order online and pick up at your convenience</p>
         </div>
 
         <!-- Delivery -->
-        <div class="bg-base-100 rounded-2xl p-6 shadow-md">
-          <div class="w-16 h-16 mx-auto mb-4 bg-olive-green/10 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="group card-lift bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-soft hover:shadow-lifted border border-white">
+          <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-olive-green/10 to-sage-green/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 group-hover:shadow-glow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-olive-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
             </svg>
           </div>
-          <h3 class="text-xl font-heading font-bold mb-2 text-neutral">Delivery</h3>
-          <p class="text-base text-base-content/70 font-body">Fresh food delivered straight to your door</p>
+          <h3 class="text-2xl font-heading font-bold mb-3 text-neutral">Delivery</h3>
+          <p class="text-base text-base-content/70 font-body leading-relaxed">Fresh food delivered straight to your door</p>
         </div>
       </div>
 
       <!-- CTA Button -->
-      <button (click)="navigateToMenu()" class="btn bg-olive-green hover:bg-olive-green/90 text-white border-none btn-lg text-lg px-12 py-4 rounded-xl shadow-lg">
-        Order Now
+      <button (click)="navigateToMenu()" class="btn-modern btn bg-olive-green hover:bg-olive-green/90 text-white border-none btn-lg text-xl px-16 py-5 rounded-2xl shadow-lifted hover-glow group mb-8">
+        <span class="group-hover:scale-110 inline-block transition-transform duration-300">Order Now</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
       </button>
 
       <!-- Social Proof -->
-      <p class="text-sm text-base-content/60 font-body mt-6">
-        Join hundreds of happy customers who love our homemade goodness!
-      </p>
+      <div class="flex items-center justify-center gap-2 text-base-content/70 font-body">
+        <div class="flex -space-x-2">
+          <div class="w-8 h-8 rounded-full bg-olive-green/20 border-2 border-white flex items-center justify-center text-xs font-bold text-olive-green">👤</div>
+          <div class="w-8 h-8 rounded-full bg-sage-green/20 border-2 border-white flex items-center justify-center text-xs font-bold text-olive-green">👤</div>
+          <div class="w-8 h-8 rounded-full bg-olive-green/20 border-2 border-white flex items-center justify-center text-xs font-bold text-olive-green">👤</div>
+        </div>
+        <p class="text-sm">
+          Join <span class="font-semibold text-olive-green">hundreds of happy customers</span> who love our homemade goodness!
+        </p>
+      </div>
     </div>
   </div>
 </div>
