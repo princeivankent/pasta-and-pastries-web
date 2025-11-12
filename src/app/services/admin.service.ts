@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, Inject, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Firestore, collection, getDocs, query, orderBy, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, query, orderBy, onSnapshot, Unsubscribe, where, Timestamp } from '@angular/fire/firestore';
 import { Observable, from, of, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Order } from '../models/order';
@@ -63,26 +63,28 @@ export class AdminService {
   /**
    * Get all orders (admin view - not filtered by userId)
    */
-  getAllOrders(): Observable<Order[]> {
+  getAllOrders(startDate?: Date, endDate?: Date): Observable<Order[]> {
     if (!this.isBrowser) {
       return of([]);
     }
 
     if (environment.useMockData) {
-      return of(this.getOrdersFromLocalStorage());
+      return of(this.getOrdersFromLocalStorage(startDate, endDate));
     } else {
-      return this.getAllOrdersFromFirestore();
+      return this.getAllOrdersFromFirestore(startDate, endDate);
     }
   }
 
   /**
    * Start listening to orders in real-time (Firestore only)
    * Returns the current orders and updates via orders$ observable
+   * @param startDate Optional start date for filtering (defaults to today at 00:00:00)
+   * @param endDate Optional end date for filtering (defaults to today at 23:59:59)
    */
-  startRealtimeListener(): void {
+  startRealtimeListener(startDate?: Date, endDate?: Date): void {
     if (!this.isBrowser || environment.useMockData) {
       // For mock data, just load once
-      this.ordersSubject.next(this.getOrdersFromLocalStorage());
+      this.ordersSubject.next(this.getOrdersFromLocalStorage(startDate, endDate));
       return;
     }
 
@@ -91,8 +93,28 @@ export class AdminService {
       this.unsubscribeSnapshot();
     }
 
+    // Default to today if no dates provided
+    if (!startDate) {
+      startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+    }
+    if (!endDate) {
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+    }
+
     const ordersCollection = collection(this.firestore, 'orders');
-    const ordersQuery = query(ordersCollection, orderBy('orderDate', 'desc'));
+
+    // Build query with date range filtering
+    const startTimestamp = Timestamp.fromDate(startDate);
+    const endTimestamp = Timestamp.fromDate(endDate);
+
+    const ordersQuery = query(
+      ordersCollection,
+      where('orderDate', '>=', startTimestamp),
+      where('orderDate', '<=', endTimestamp),
+      orderBy('orderDate', 'desc')
+    );
 
     this.unsubscribeSnapshot = onSnapshot(
       ordersQuery,
@@ -125,9 +147,25 @@ export class AdminService {
 
   // ============= FIRESTORE METHODS =============
 
-  private getAllOrdersFromFirestore(): Observable<Order[]> {
+  private getAllOrdersFromFirestore(startDate?: Date, endDate?: Date): Observable<Order[]> {
     const ordersCollection = collection(this.firestore, 'orders');
-    const ordersQuery = query(ordersCollection, orderBy('orderDate', 'desc'));
+
+    let ordersQuery;
+
+    if (startDate && endDate) {
+      // Build query with date range filtering
+      const startTimestamp = Timestamp.fromDate(startDate);
+      const endTimestamp = Timestamp.fromDate(endDate);
+
+      ordersQuery = query(
+        ordersCollection,
+        where('orderDate', '>=', startTimestamp),
+        where('orderDate', '<=', endTimestamp),
+        orderBy('orderDate', 'desc')
+      );
+    } else {
+      ordersQuery = query(ordersCollection, orderBy('orderDate', 'desc'));
+    }
 
     return from(getDocs(ordersQuery)).pipe(
       map(snapshot => {
@@ -149,7 +187,7 @@ export class AdminService {
 
   // ============= LOCAL STORAGE METHODS =============
 
-  private getOrdersFromLocalStorage(): Order[] {
+  private getOrdersFromLocalStorage(startDate?: Date, endDate?: Date): Order[] {
     if (!this.isBrowser) {
       return [];
     }
@@ -161,9 +199,19 @@ export class AdminService {
 
     const orders = JSON.parse(ordersData);
     // Convert date strings back to Date objects
-    return orders.map((order: any) => ({
+    let filteredOrders = orders.map((order: any) => ({
       ...order,
       orderDate: new Date(order.orderDate)
-    })).sort((a: Order, b: Order) => b.orderDate.getTime() - a.orderDate.getTime());
+    }));
+
+    // Apply date filtering if provided
+    if (startDate && endDate) {
+      filteredOrders = filteredOrders.filter((order: Order) => {
+        const orderDate = new Date(order.orderDate);
+        return orderDate >= startDate && orderDate <= endDate;
+      });
+    }
+
+    return filteredOrders.sort((a: Order, b: Order) => b.orderDate.getTime() - a.orderDate.getTime());
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { CheckoutService } from '../../../services/checkout.service';
@@ -11,7 +12,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']
 })
@@ -22,6 +23,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   private ordersSubscription?: Subscription;
   private previousOrderCount: number = 0;
+
+  // Date filtering properties
+  dateFilterType: 'today' | 'range' = 'today';
+  startDate: string = '';
+  endDate: string = '';
 
   statusOptions = [
     { value: 'all', label: 'All Orders' },
@@ -43,8 +49,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Start real-time listener
-    this.adminService.startRealtimeListener();
+    // Initialize date inputs with today's date
+    this.initializeDateFilters();
+
+    // Start real-time listener with date filter (defaults to today)
+    this.applyDateFilter();
 
     // Subscribe to orders observable
     this.ordersSubscription = this.adminService.orders$.subscribe(orders => {
@@ -181,6 +190,72 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this.toastService.success('Browser notifications enabled!');
     } else {
       this.toastService.warning('Notification permission denied. You can still receive in-app notifications.');
+    }
+  }
+
+  /**
+   * Initialize date filter inputs with today's date
+   */
+  initializeDateFilters(): void {
+    const today = new Date();
+    this.startDate = this.formatDateForInput(today);
+    this.endDate = this.formatDateForInput(today);
+  }
+
+  /**
+   * Format date for HTML date input (YYYY-MM-DD)
+   */
+  formatDateForInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  /**
+   * Apply date filter and restart real-time listener
+   */
+  applyDateFilter(): void {
+    let startDateTime: Date;
+    let endDateTime: Date;
+
+    if (this.dateFilterType === 'today') {
+      // Filter for today only
+      startDateTime = new Date();
+      startDateTime.setHours(0, 0, 0, 0);
+      endDateTime = new Date();
+      endDateTime.setHours(23, 59, 59, 999);
+    } else {
+      // Custom date range
+      startDateTime = new Date(this.startDate);
+      startDateTime.setHours(0, 0, 0, 0);
+      endDateTime = new Date(this.endDate);
+      endDateTime.setHours(23, 59, 59, 999);
+    }
+
+    // Restart listener with new date range
+    this.isLoading = true;
+    this.adminService.startRealtimeListener(startDateTime, endDateTime);
+  }
+
+  /**
+   * Handle date filter type change (today vs range)
+   */
+  onDateFilterTypeChange(type: 'today' | 'range'): void {
+    this.dateFilterType = type;
+    if (type === 'today') {
+      // Reset to today
+      this.initializeDateFilters();
+    }
+    this.applyDateFilter();
+  }
+
+  /**
+   * Handle custom date range change
+   */
+  onDateRangeChange(): void {
+    if (this.startDate && this.endDate) {
+      this.applyDateFilter();
     }
   }
 }
