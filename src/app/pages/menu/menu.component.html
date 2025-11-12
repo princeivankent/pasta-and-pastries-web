@@ -26,41 +26,29 @@
     <div class="flex justify-center mb-16">
       <div class="inline-flex gap-3 p-2 bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft border border-neutral/10">
         <button
+          [ngClass]="{
+            'bg-gradient-to-r from-olive-green to-sage-green text-white shadow-glow': selectedCategory === 'all',
+            'bg-transparent text-base-content hover:bg-olive-green/5': selectedCategory !== 'all'
+          }"
           class="btn-modern px-8 py-3 rounded-xl font-body font-semibold transition-all duration-300"
-          [class.bg-gradient-to-r]="selectedCategory === 'all'"
-          [class.from-olive-green]="selectedCategory === 'all'"
-          [class.to-sage-green]="selectedCategory === 'all'"
-          [class.text-white]="selectedCategory === 'all'"
-          [class.shadow-glow]="selectedCategory === 'all'"
-          [class.bg-transparent]="selectedCategory !== 'all'"
-          [class.text-base-content]="selectedCategory !== 'all'"
-          [class.hover:bg-olive-green/5]="selectedCategory !== 'all'"
           (click)="filterByCategory('all')">
           All Items
         </button>
         <button
+          [ngClass]="{
+            'bg-gradient-to-r from-olive-green to-sage-green text-white shadow-glow': selectedCategory === 'pasta',
+            'bg-transparent text-base-content hover:bg-olive-green/5': selectedCategory !== 'pasta'
+          }"
           class="btn-modern px-8 py-3 rounded-xl font-body font-semibold transition-all duration-300"
-          [class.bg-gradient-to-r]="selectedCategory === 'pasta'"
-          [class.from-olive-green]="selectedCategory === 'pasta'"
-          [class.to-sage-green]="selectedCategory === 'pasta'"
-          [class.text-white]="selectedCategory === 'pasta'"
-          [class.shadow-glow]="selectedCategory === 'pasta'"
-          [class.bg-transparent]="selectedCategory !== 'pasta'"
-          [class.text-base-content]="selectedCategory !== 'pasta'"
-          [class.hover:bg-olive-green/5]="selectedCategory !== 'pasta'"
           (click)="filterByCategory('pasta')">
           🍝 Pasta
         </button>
         <button
+          [ngClass]="{
+            'bg-gradient-to-r from-olive-green to-sage-green text-white shadow-glow': selectedCategory === 'pastry',
+            'bg-transparent text-base-content hover:bg-olive-green/5': selectedCategory !== 'pastry'
+          }"
           class="btn-modern px-8 py-3 rounded-xl font-body font-semibold transition-all duration-300"
-          [class.bg-gradient-to-r]="selectedCategory === 'pastry'"
-          [class.from-olive-green]="selectedCategory === 'pastry'"
-          [class.to-sage-green]="selectedCategory === 'pastry'"
-          [class.text-white]="selectedCategory === 'pastry'"
-          [class.shadow-glow]="selectedCategory === 'pastry'"
-          [class.bg-transparent]="selectedCategory !== 'pastry'"
-          [class.text-base-content]="selectedCategory !== 'pastry'"
-          [class.hover:bg-olive-green/5]="selectedCategory !== 'pastry'"
           (click)="filterByCategory('pastry')">
           🥐 Pastries
         </button>
